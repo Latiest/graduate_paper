@@ -1,0 +1,56 @@
+\begin{abstract}
+    本文针对晶圆制造系统，提出了一种新的时间Petri网子类，变迁库所时间网对其进行建模，并设计了一套变迁发射时Petri网时间更新机制，并使用蚁群算法对其进行调度。
+    在蚁群算法中，将每一只蚂蚁看作一个调度器，通过模拟蚂蚁在Petri网可达图上的移动和信息交流，实现了对系统的调度优化。
+    通过实验比较，发现蚁群算法无法得到最优解。
+    于是提出超级蚂蚁机制、贪心选取初始信息素、使用贪心算法预添加信息素、复活蚂蚁、蚁群算法与模拟退火算法结合、蚂蚁回溯这6种优化思路，
+    经过实验比较分析，最终蚂蚁回溯算法有不错的效果，
+    证明了该方法在优化系统调度效率和降低制造成本方面的有效性。
+    本文的研究为晶圆制造系统的调度问题提供了一种新的优化思路和方法。
+
+\keywords{晶圆制造系统，Petri网，时间Petri网，蚁群算法，回溯算法}
+\end{abstract}
+\begin{englishabstract}
+    In this paper, a new temporal Petri network subclass is proposed for the wafer fabrication system, which is modeled by the time network of the transition library, and a set of Petri net time update mechanism at the time of transition launch is designed, and it is scheduled by ant colony algorithm.
+    In the ant colony algorithm, each ant is regarded as a scheduler, and the scheduling optimization of the system is realized by simulating the movement and information exchange of ants on the Petri network reachability map.
+    Through experimental comparison, it is found that the ant colony algorithm cannot obtain the optimal solution.
+
+    Therefore, six optimization ideas are proposed: super ant mechanism, greedy selection of initial pheromones, pre-addition of pheromones using greedy algorithm, resurrection of ants, combination of ant colony algorithm and simulated annealing algorithm, and ant backtracking.
+    After experimental comparison and analysis, the ant backtracking algorithm finally has a good effect.
+
+    The effectiveness of this method in optimizing system scheduling efficiency and reducing manufacturing costs is proved.
+
+    The research in this paper provides a new optimization idea and method for the scheduling problem of wafer fabrication system.
+    
+\englishkeywords{Wafer fabrication systems，Petri Net，Time Petri Net，Ant colony algorithm，Backtracking algorithm}
+\end{englishabstract}
+\XDUpremainmatter
+\begin{symbollist}{lX}
+符号 & 符号名称\\
+$[N]$                              &关联矩阵\\
+$[N]^+$                            &输出关联矩阵\\
+$[N]^-$                            &输入关联矩阵\\
+$\mathbb{N}$                       &自然数集合\\
+$\mathbb{N}^{+}$                   &正整数集合\\
+$N$                                &Petri网\\
+$P$                                &库所集合\\
+$p$                                &一个库所\\
+$p^\bullet$                        &库所$p$的后置\\
+$^\bullet p$                       &库所$p$的前置\\
+$\mathbb{Q}_{0}^{+}$               &正有理数集合\\
+$R(N, M_0)$                        &网$(N, M_0)$的状态空间\\
+$RG(N, M_0)$                       &网$(N, M_0)$的可达图\\
+$\mathbb{R}^{+}$                   &正实数集合\\
+$T$                                &变迁集合\\
+$t$                                &一个变迁\\
+$t^\bullet$                        &变迁$t$的后置\\
+$^\bullet t$                       &变迁$t$的前置\\
+\end{symbollist}
+\begin{abbreviationlist}{lXX}
+缩略语 & 英文全称 & 中文对照\\
+TPN           &Time Petri Net                              &时间Petri网\\
+TdPN          &Timed Petri Net                             &时延Petri网\\
+TTPN          &Time Transition Petri Net                   &带时间变迁的Petri网\\
+TPPN          &Time Place Petri Net                        &带时间库所的Petri网\\
+TAPN          &Time Arc Petri Net                          &带时间弧的Petri网\\
+TTPPN         &Time Transition Place Petri Net             &变迁库所时间网\\
+\end{abbreviationlist}
