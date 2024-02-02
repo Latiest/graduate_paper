@@ -1,6 +1,7 @@
 \chapter{相关技术概述}
 \section{相关算法}
 \subsection{K-Shape时间序列聚类算法}
+\label{section2.1.1}
 K-Shape算法\cite{yang2017k}是一种基于形状的时间序列聚类算法，用于将相似的时间序列分为同一类。其基本思想是通过对时间序列进行自动化预处理和转换，然后使用基
 于形态的距离SBD（\textbf{\underline{S}}hped-\textbf{\underline{B}}ased \textbf{\underline{D}}istance）来计算时间序列之间的相似
 度，从而实现聚类。K-Shpae使用归一化的互相关系数$NCC_{c}$（Normalized Cross-Correlation Coefficient）来描述两个时间序列的形状相似性。$NCC_{c}$是
@@ -8,7 +9,16 @@ K-Shape算法\cite{yang2017k}是一种基于形状的时间序列聚类算法，
 和 \( y_t \) 中，\( x_t \) 可以通过滑动窗口 \( s \) 来计算与 \( y_t \) 的互相关 \( CC_w(x_t, y_t) \)，其中 \( s \) 是滑动窗口的大小，
 \( x_t' \) 是 \( x_t \) 的滑动版本。当 \( s > 0 \) 时，\( x_t' \) 是 \( x_t \) 向右滑动 \( s \) 个单位的结果，
 即 \( x_t' = (0, \ldots, 0, x_1, x_2, \ldots, x_{m-s}) \)；当 \( s < 0 \) 时，\( x_t' \) 是 \( x_t \) 向左滑动 \( |s| \) 个单位
-的结果，即 \( x_t' = (x_{-s}, \ldots, x_m - 1, x_m, 0, \ldots, 0) \)。\( CC_w(x_t, y_t) \) 的计算公式如公式\eqref{eq:NCC1}与公式
+的结果，即 \( x_t' = (x_{-s}, \ldots, x_m - 1, x_m, 0, \ldots, 0) \)。具体表达式如公式\eqref{eq:shift}所示：
+\begin{equation}
+    x_(s) = 
+        \begin{cases} 
+        \overbrace{(0, \ldots, 0)}^{|s|}, x_{1+s}, x_2, \ldots, x_{m-s}, & s \geq 0 \\
+        x_{1-s}, \ldots, x_{m-1}, x_m, \underbrace{(0, \ldots, 0)}_{|s|}, & s < 0 
+        \end{cases}
+    \label{eq:shift}
+\end{equation}
+\( CC_w(x_t, y_t) \) 的计算公式如公式\eqref{eq:NCC1}与公式
 \eqref{eq:NCC2}所示。
 当 \( w \leq m \) 时，
 \begin{equation}

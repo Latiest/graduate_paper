@@ -29,7 +29,7 @@
 初始报表的数据复杂且混乱，需要我们对其进行数据清理和整理，以形成一张规范的报表。在此基础上可以获取完整的产量数据，我们再根据第2章的方法对其进行归一化处理。然后
 通过上文的方式选取初始参考中心。接下来，我们将通过不断的迭代更新簇心的方式来寻找最终的气井分类结果。这个过程将一直持续，直到簇心不再发生变化或者达到了预设
 的最大迭代次数。最终，我们将得到一个高质量的气井分类结果。
-\subsection{数据处理与分析}
+\subsection{数据处理}
 由于接下来需要进行气井产量预测，因此本章将所有需要用到的气井数据进行统一处理，而不仅仅只处理产量数据。原始数据集为单井日报文件，所给原始数据集时间跨度为：2012年8月3日至2022年8月15日，储存格式为一月的数据储存在一张excel多表中，一年共12张多表，每个
 多表包含一月的数据，其中每日数据记录在一张excel表中，表中包含信息有所属井丛，井号，配产，生产时间(日累，月累，其中月累从2014年4月引入)，油压，
 套压(从2016年9月起开始引入)，井口温度，注醇量(以井丛为单位)，产气量(日产，月累，年累，历年年累)，投产日期，备注(开关井信息)等。为进行批量读取处
@@ -69,13 +69,16 @@
     \caption{进行处理后的数据集示意图}
     \label{fig:afterprocess}
 \end{figure}
+
 剔除生产日期小于60天的井后，对其余井的历年累积产量，平均产量，峰值产量的进行统计分析，统计项包括计数，平均值，标准差，最小值，25\%分位数，中位数数，
 75\%分位数，最大值，结果如下表所示，共910项数据。
+
 \begin{figure}
     \centering
     \includegraphics{figure/gasproduction.png}
     \caption{历年累积产量，平均产量，峰值产量的统计结果}
 \end{figure}
+
 为方便查看每口井产气量随时间的变化趋势，以及井与井之间的时间序列曲线是否不相交，对所有井的产量随时间的变化曲线进行绘制，所绘制折线图为交互式的，可以选择需要查看的井，以及检查曲线处单点的值。
 \begin{figure}
     \centering
@@ -88,3 +91,30 @@
     \includegraphics[scale=0.3,angle=0]{figure/awellgraph.png}
     \caption{井SN0004-04的产量随时间的变化曲线}
 \end{figure}
+\subsection{计算SBD距离}
+由章节\ref{section2.1.1}可得，要计算SBD距离，需要先计算两条时间序列$x_t,y_t$之间的互相关$CC_w$,对互相关归一化得到$NCC_c$,根据最大的$NCC_c$计算两条序列
+之间的SBD距离。再通过$NCC_c$取最大值（即$CC_w$值最大）时的w值减去$y_t$的长度来确定$y_t$与$x_t$最匹配时应该移动的步数。其算法如算法\ref{al:SBD}所示：
+\begin{algorithm}[H]
+    \caption{计算SBD距离以及与$y_t$对齐后的序列$\hat{y}_t$:$(\text{distance}, \hat{y}_t) = SBD(x_t, y_t)$}
+    \begin{algorithmic}[1]
+        \Require 两个归一化后的序列$x_t,y_t$
+        \Ensure SBD距离dist，与$x_t$对齐后的序列$\hat{y}_t$
+        \State 计算互相关值$CC_w(x_t, y_t) = F^{-1}(F(x_t) \times F(y_t))$\Comment{公式\eqref{eq:ccf}}%\eqref{eq:ccf}
+        \State 对互相关值进行系数归一化$NCC_c = \frac{CC_w(x,y)}{\|x\|\|y\|}$
+        \State $SBD(x_t, y_t) = 1 - \max_w \left( \frac{CC_w(x_t, y_t)}{\|x_t\| \cdot \|y_t\|} \right)$\Comment{公式\eqref{eq:SBD}}
+        \State 计算$x_t,y_t$的长度$l_{y} = \text{length}(y_{t}),\text{length}(y_{t})$
+        \State $y_t$的移动步数shift为$s = \text{which.max}(NCC) - l_y$
+        \If{$s \geq 0$}:
+            \State $\hat{y}_t = [\text{zeros}(0,s),y(1:l_x - s)]$\Comment{公式\eqref{eq:shift}}
+        \Else:
+            \State $\hat{y}_t = [y(1 - s:l_y),\text{zeros}(1,l_x - l_y - s)]$\Comment{公式\eqref{eq:shift}}
+        \EndIf
+    \end{algorithmic}
+    \label{al:SBD}
+\end{algorithm}  
+\subsection{基于SBD距离的簇心提取}
+根据章节\ref{section2.1.1}的介绍，求簇心需要得到$\mathbf{S} = \sum_{x_t \in P_k} x_t \cdot x_t^T$的最大特征值，此时$\mathbf{S}$最大特征值
+对应的特征向量就是簇心对应的矩阵。其算法如算法\ref{al:center}所示：
+\begin{algorithm}
+    \caption{根据当前簇心\mathbf{C}和所有点\mathbf{S},计算更合理的簇心\hat{\mathbf{C}}:$\mathbf{\hat{C}} = \text{SE}(\mathbf{C},\mathbf{X})$}
+\end{algorithm}
