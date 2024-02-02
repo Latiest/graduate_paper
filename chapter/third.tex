@@ -22,7 +22,7 @@
 \begin{figure}
     \centering
     % Requires \usepackage{graphicx}
-    \includegraphics[scale=0.3,angle=0]{figure/K-Shape.jpg}\\
+    \includegraphics[scale=0.15,angle=0]{figure/K-Shape.jpg}\\
     \caption{基于改进的K-Shape时间序列聚类算法的气井分类算法流程图}
     \label{fig:K-Shape}
 \end{figure}
@@ -30,8 +30,61 @@
 通过上文的方式选取初始参考中心。接下来，我们将通过不断的迭代更新簇心的方式来寻找最终的气井分类结果。这个过程将一直持续，直到簇心不再发生变化或者达到了预设
 的最大迭代次数。最终，我们将得到一个高质量的气井分类结果。
 \subsection{数据处理与分析}
-原始数据集为单井日报文件，所给原始数据集时间跨度为：2012年8月3日至2022年8月15日，储存格式为一月的数据储存在一张excel多表中，一年共12张多表，每个
+由于接下来需要进行气井产量预测，因此本章将所有需要用到的气井数据进行统一处理，而不仅仅只处理产量数据。原始数据集为单井日报文件，所给原始数据集时间跨度为：2012年8月3日至2022年8月15日，储存格式为一月的数据储存在一张excel多表中，一年共12张多表，每个
 多表包含一月的数据，其中每日数据记录在一张excel表中，表中包含信息有所属井丛，井号，配产，生产时间(日累，月累，其中月累从2014年4月引入)，油压，
 套压(从2016年9月起开始引入)，井口温度，注醇量(以井丛为单位)，产气量(日产，月累，年累，历年年累)，投产日期，备注(开关井信息)等。为进行批量读取处
 理，需要先按照数据格式对所有报表进行划分，划分需考虑的因素包括不同的表头，报表的不同组织形式，不同的日期记录格式，剔除不需要的表（如一些影响批量读取的
 总结性信息。如2012年的数据格式记录较为混乱，8，9两月的单井日报单井记录为了一个excel文件，10月，11月，12月三个月份的数据，由3个excel包含了各自月份的数据。
+如图\ref{fig:difTable}展示了不同的表头、日期记录格式和表中的总结性表。
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3,angle=0]{figure/表头1.png}
+    \hfil
+    \includegraphics[scale=0.3,angle=0]{figure/表头2.png}
+    \hfil
+    \includegraphics[scale=0.25,angle=0]{figure/表头3.png}
+    \hfil
+    \includegraphics[scale=0.3,angle=0]{figure/日期格式1.png}
+    \hfil
+    \includegraphics[scale=0.3,angle=0]{figure/日期格式2.png}
+    \hfil
+    \includegraphics[scale=0.3,angle=0]{figure/总结性表.png}
+    \caption{不同的表头、日期格式及总结性表}
+    \label{fig:difTable}
+\end{figure}
+
+对原始数据进行初步分析，需要的列包括日期，集气站号，井序号，日产时间，井口压力(油压)，套压，井口温度，日产量，投产时间，其中套压数据从2016年9月开始。
+
+批量读取原始数据，去除每张表中原始数据中的冗余信息，并提取出相关的列，得到所有的单井日报数据表，每张表存储在一个csv格式的文件中。每日的单井日报数据可
+以看作一个数据集，为合并多数据集为一个单数据集，需对所有的单井日报数据进行一致化处理，具体步骤如下：对需要的列的空值进行填充；数据格式转换，所有单日数据
+统一转换为csv格式，时间跨度为2012年8月3日至2022年8月15日，共计生成约3664个csv文件。生成所有的单数据集后，需先对所有的数据进行数据合并以生成一个完整
+数据集，这个完整数据集中包含了所有气井所有时间的数据，存储在一个csv文件中，文件名为GasProductionOri.csv。然后进行单数据集的数据清洗过程，具体步骤
+为，选择合适的子列，并对列进行重新命名，数据集按时间顺序排列，如图\ref{fig:afterprocess}所示。下一步进行数据类型统一化，即处理格式错误，需要处理的项包括，对日期数据的标准
+化，即将日期格式的数据统一转换为一定的格式，如’2022-08-15’，然后转换为标准的时间戳格式，浮点数类型的标准化，将字符串记录的数值统一转换为浮点型；然后处
+理记录错误或异常值的情况，数据集中存在的异常情况是生产时间和日产量不匹配的问题，具体来说，存在部分记录日产量记录为0.0008，但日开井时间却为24小时，因此
+需要将这部分数据的日开井时间修正为0。最后，检验数据集中存在的重复值，进行去重处理，得到训练时间序列模型所需要的完整数据集。
+\begin{figure}
+    \centering
+    \includegraphics{figure/afterprocessdata.png}
+    \caption{进行处理后的数据集示意图}
+    \label{fig:afterprocess}
+\end{figure}
+剔除生产日期小于60天的井后，对其余井的历年累积产量，平均产量，峰值产量的进行统计分析，统计项包括计数，平均值，标准差，最小值，25\%分位数，中位数数，
+75\%分位数，最大值，结果如下表所示，共910项数据。
+\begin{figure}
+    \centering
+    \includegraphics{figure/gasproduction.png}
+    \caption{历年累积产量，平均产量，峰值产量的统计结果}
+\end{figure}
+为方便查看每口井产气量随时间的变化趋势，以及井与井之间的时间序列曲线是否不相交，对所有井的产量随时间的变化曲线进行绘制，所绘制折线图为交互式的，可以选择需要查看的井，以及检查曲线处单点的值。
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3,angle=0]{figure/productiongraph.png}
+    \caption{在一张图上同时绘制多口井产量随时间的变化曲线}
+    \label{fig:productionchange}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3,angle=0]{figure/awellgraph.png}
+    \caption{井SN0004-04的产量随时间的变化曲线}
+\end{figure}
