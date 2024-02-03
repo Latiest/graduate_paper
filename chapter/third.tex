@@ -14,7 +14,8 @@
 在气井产量的时间序列聚类分析中，我们的目标是将历史产量数据分组，以揭示不同气井的生产行为和潜在模式。具体而言，每个气井的时间序列数据可以表示为 \( X_i = \{x_{i1}, x_{i2}, \ldots, x_{im}\} \)，其中 \( m \) 代表了时间序列的长度，即观测周期的总数。我们有 \( N \) 个这样的时间序列，形成了一个时间序列集合 \( X = \{x_1, x_2, \ldots, x_N\} \)，我们的目标是将这些序列聚类到 \( k \) 个不同的类别中。
 在聚类分析中，每个类别可能代表着不同的气井种类，正处在高产期和衰退期的井之间的时间序列差异巨大。假设k=3（但实际应用中需要根据肘部法则来确定最优的k值）则种类可以预先定义为类别 \( Y = \{0,1,2\} \)。因此，我们的任务是定义一个映射函数 \( f: X \to Y \)，它可以将每个时间序列分配到这些预定义的类别中。
 \section{基于改进的K-Shape时间序列聚类算法的气井分类算法}
-\subsection{算法流程}
+\subsection{算法流程}\
+\label{sec:K-Shapeprocess}
 在传统的K-Shape聚类算法中，初始参考中心的选择是通过从样本集中随机挑选k个样本来进行的。这种随机选择方法可能会导致算法收敛于次优解，且每次运行结果都不一致，导致聚类结果不稳定。尤其是当数据集包含噪声或者离群点时。随机选取的初始中心可能不代表数据的真实结构，导致最终的聚类结果缺乏可解释性和准确性。此外，当样本集规模庞大时，随机选择方法可能导致算法收敛速度缓慢，影响聚类效率。
 为了确定合适的聚类，通常采用多次实验的方法。本文结合领域知识和数据特点给出了一种改进策略：即根据数据特征选取初始中心点。具体如下：根据气井的历年累计产量，平均产量，
 峰值产量的统计结果，对气井进行排序，并将其划分为k个区间，在每个区间内抽取中间的气井作为初始中心点。这样的方式可以使得初始的中心点更符合数据分布，从而实现
@@ -95,7 +96,7 @@
 由章节\ref{section2.1.1}可得，要计算SBD距离，需要先计算两条时间序列$x_t,y_t$之间的互相关$CC_w$,对互相关归一化得到$NCC_c$,根据最大的$NCC_c$计算两条序列
 之间的SBD距离。再通过$NCC_c$取最大值（即$CC_w$值最大）时的w值减去$y_t$的长度来确定$y_t$与$x_t$最匹配时应该移动的步数。其算法如算法\ref{al:SBD}所示：
 \begin{algorithm}[H]
-    \caption{计算SBD距离以及与$y_t$对齐后的序列$\hat{y}_t$:$(\text{distance}, \hat{y}_t) = SBD(x_t, y_t)$}
+    \caption{计算SBD距离以及与$y_t$对齐后的序列$y'_t$:$(\text{dist}, y'_t) = SBD(x_t, y_t)$}
     \begin{algorithmic}[1]
         \Require 两个归一化后的序列$x_t,y_t$
         \Ensure SBD距离dist，与$x_t$对齐后的序列$\hat{y}_t$
@@ -116,5 +117,47 @@
 根据章节\ref{section2.1.1}的介绍，求簇心需要得到$\mathbf{S} = \sum_{x_t \in P_k} x_t \cdot x_t^T$的最大特征值，此时$\mathbf{S}$最大特征值
 对应的特征向量就是簇心对应的矩阵。其算法如算法\ref{al:center}所示：
 \begin{algorithm}
-    \caption{根据当前簇心\mathbf{C}和所有点\mathbf{S},计算更合理的簇心\hat{\mathbf{C}}:$\mathbf{\hat{C}} = \text{SE}(\mathbf{C},\mathbf{X})$}
+    \caption{根据当前聚类中心 $\mathbf{C}$ 和所有点 $\mathbf{X}$，计算更合理的聚类中心 $\mathbf{C'}$：$\mathbf{C'} = SE(\mathbf{C}, \mathbf{X})$}
+    \begin{algorithmic}[1]
+        \Require 簇内所有归一化之后的$n \times m$阶的时间序列矩阵$\mathbf{X}$；参考聚类中心$\mathbf{C}$
+        \Ensure 新的聚类中心$\mathbf{C'}$
+        \ForAll {$\mathbf{X}(i) \in \mathbf{X}$}
+            \State 计算所有序列到中心的SBD距离以及与$x_t$对齐后的序列$x'_t$：$(\text{dist}, x'_t) = SBD(\mathbf{C}, x_t)$\Comment{算法\ref{al:SBD}}
+            \State 由$x'_t$得到对齐后的序列矩阵$\mathbf{X'}$
+        \EndFor
+        \State 计算矩阵$\mathbf{S} = \mathbf{X}^T \cdot \mathbf{X}'$\Comment{公式\ref{eq:ckfin}中的$\mathbf{S}$}
+        \State 对矩阵$\mathbf{S}$正则化后取其最大值对应的特征向量$\mathbf{C'}$
+    \end{algorithmic}
+    \label{al:center}
 \end{algorithm}
+\subsection{改进的k-Shape聚类}
+与K-means相似，改进的K-Shape也通过迭代的方式不断更新聚类中心，并将对齐后的序列分配给各个簇心，直到迭代中心不再更新或者达到最大迭代次数为止。其过程
+可以分为下面两步：
+
+（1） 通过算法\ref{al:SBD}计算出的SBD距离，把数据分配给距离其最近的簇心；
+
+（2） 根据（1）得到的聚类中心，通过算法\ref{al:center}计算新的聚类中心。
+
+结合上文中的内容，最终改进的K-Shape算法如算法\ref{al:K-Shape}所示。
+\begin{algorithm}
+    \caption{改进的K-Shape聚类}
+    \begin{algorithmic}[1]
+        \Require 归一化后样本集$\{x_1, x_2, \ldots, x_n\}$组成的$n \times m$阶时间序列矩阵$\mathbf{X}$，聚类簇数k
+        \Ensure 各个样本所属的簇标记，$k \times m$阶簇心矩阵$\mathbf{C}$
+        \State 根据章节\ref{sec:K-Shapeprocess}中的方法选取初始参考中心$c_j,j = 1, 2, \ldots, k$
+        \While {聚类中心不再更新or迭代次数小于100:}
+            \For {$i = 1, 2, \ldots, n$：} 
+                \For {$j = 1, 2, \ldots, k$：}
+                    \State 计算$SBD(c_j,x_i)$距离\Comment{算法\ref{al:SBD}}
+                \EndFor
+                \State 将$x_i$分配到距离其最近的中心所属的簇并将该簇所有序列记为矩阵$\mathbf{X_j}$
+            \EndFor
+            \For {$j = 1,2,\ldots,k$：}
+                计算新聚类中心 $\mathbf{c_j}$：$\mathbf{c_j} = SE(\mathbf{c_j}, \mathbf{X_j})$\Comment{算法\ref{al:center}}
+            \EndFor
+        \EndWhile
+    \end{algorithmic}
+    \label{al:K-Shape}
+\end{algorithm}
+\section{实验对比分析}
+\section{本章小结}
