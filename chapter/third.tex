@@ -31,13 +31,14 @@
 通过上文的方式选取初始参考中心。接下来，我们将通过不断的迭代更新簇心的方式来寻找最终的气井分类结果。这个过程将一直持续，直到簇心不再发生变化或者达到了预设
 的最大迭代次数。最终，我们将得到一个高质量的气井分类结果。
 \subsection{数据处理}
+\label{cha:data}
 由于接下来需要进行气井产量预测，因此本章将所有需要用到的气井数据进行统一处理，而不仅仅只处理产量数据。原始数据集为单井日报文件，所给原始数据集时间跨度为：2012年8月3日至2022年8月15日，储存格式为一月的数据储存在一张excel多表中，一年共12张多表，每个
 多表包含一月的数据，其中每日数据记录在一张excel表中，表中包含信息有所属井丛，井号，配产，生产时间(日累，月累，其中月累从2014年4月引入)，油压，
 套压(从2016年9月起开始引入)，井口温度，注醇量(以井丛为单位)，产气量(日产，月累，年累，历年年累)，投产日期，备注(开关井信息)等。为进行批量读取处
 理，需要先按照数据格式对所有报表进行划分，划分需考虑的因素包括不同的表头，报表的不同组织形式，不同的日期记录格式，剔除不需要的表（如一些影响批量读取的
 总结性信息。如2012年的数据格式记录较为混乱，8，9两月的单井日报单井记录为了一个excel文件，10月，11月，12月三个月份的数据，由3个excel包含了各自月份的数据。
 如图\ref{fig:difTable}展示了不同的表头、日期记录格式和表中的总结性表。
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.3,angle=0]{figure/表头1.png}
     \hfil
@@ -64,7 +65,7 @@
 化，即将日期格式的数据统一转换为一定的格式，如’2022-08-15’，然后转换为标准的时间戳格式，浮点数类型的标准化，将字符串记录的数值统一转换为浮点型；然后处
 理记录错误或异常值的情况，数据集中存在的异常情况是生产时间和日产量不匹配的问题，具体来说，存在部分记录日产量记录为0.0008，但日开井时间却为24小时，因此
 需要将这部分数据的日开井时间修正为0。最后，检验数据集中存在的重复值，进行去重处理，得到训练时间序列模型所需要的完整数据集。
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics{figure/afterprocessdata.png}
     \caption{进行处理后的数据集示意图}
@@ -74,20 +75,20 @@
 剔除生产日期小于60天的井后，对其余井的历年累积产量，平均产量，峰值产量的进行统计分析，统计项包括计数，平均值，标准差，最小值，25\%分位数，中位数数，
 75\%分位数，最大值，结果如下表所示，共910项数据。
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics{figure/gasproduction.png}
     \caption{历年累积产量，平均产量，峰值产量的统计结果}
 \end{figure}
 
 为方便查看每口井产气量随时间的变化趋势，以及井与井之间的时间序列曲线是否不相交，对所有井的产量随时间的变化曲线进行绘制，所绘制折线图为交互式的，可以选择需要查看的井，以及检查曲线处单点的值。
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.3,angle=0]{figure/productiongraph.png}
     \caption{在一张图上同时绘制多口井产量随时间的变化曲线}
     \label{fig:productionchange}
 \end{figure}
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.3,angle=0]{figure/awellgraph.png}
     \caption{井SN0004-04的产量随时间的变化曲线}
@@ -116,7 +117,7 @@
 \subsection{基于SBD距离的簇心提取}
 根据章节\ref{section2.1.1}的介绍，求簇心需要得到$\mathbf{S} = \sum_{x_t \in P_k} x_t \cdot x_t^T$的最大特征值，此时$\mathbf{S}$最大特征值
 对应的特征向量就是簇心对应的矩阵。其算法如算法\ref{al:center}所示：
-\begin{algorithm}
+\begin{algorithm}[H]
     \caption{根据当前聚类中心 $\mathbf{C}$ 和所有点 $\mathbf{X}$，计算更合理的聚类中心 $\mathbf{C'}$：$\mathbf{C'} = SE(\mathbf{C}, \mathbf{X})$}
     \begin{algorithmic}[1]
         \Require 簇内所有归一化之后的$n \times m$阶的时间序列矩阵$\mathbf{X}$；参考聚类中心$\mathbf{C}$
@@ -139,7 +140,7 @@
 （2） 根据（1）得到的聚类中心，通过算法\ref{al:center}计算新的聚类中心。
 
 结合上文中的内容，最终改进的K-Shape算法如算法\ref{al:K-Shape}所示。
-\begin{algorithm}
+\begin{algorithm}[H]
     \caption{改进的K-Shape聚类}
     \begin{algorithmic}[1]
         \Require 归一化后样本集$\{x_1, x_2, \ldots, x_n\}$组成的$n \times m$阶时间序列矩阵$\mathbf{X}$，聚类簇数k
