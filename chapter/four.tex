@@ -73,6 +73,7 @@
 表征，然后分别输入到Encoder和Decoder中。Encoder部分使用GRU网络来编码历史时刻的信息，输出一个固定长度的向量，表示整个历史序列的含义。
 Decoder部分使用自注意力机制来解码未来时刻的预测值，每个预测值都是根据之前所有时刻的加权结果得到的，这样可以提高模型的准确性。
 \section{数据处理及分类}
+\label{sec:datafoc}
 气井的数据在第\ref{cha:data}章已经选取了日期，集气站号，井序号，日产时间，井口压力(油压)，套压，井口温度，日产量和投产时间等数据存储在了一
 个名为GasProductionOri.csv的文件中。
 
@@ -101,7 +102,7 @@ Decoder部分使用自注意力机制来解码未来时刻的预测值，每个�
     \label{fig:TFT}
     \caption{基于transformer的气井产量预测算法的模型结构图}
 \end{figure}
-由图中可知，网络模型主要由门控残差网络、输入层、时间特征的局部处理层、静态浓缩层、时域注意力层、position-wise前馈层以及分位数预测层组成。
+由图中可知，网络模型主要由门控残差网络、输入层、时间特征处理层、时域注意力层、position-wise前馈层以及分位数预测层组成。
 \subsection{门控残差网络}
 \label{cha:GRN}
 由于输入与目标之间的关系是未知的，对于预测结果而言，到底需要什么程度的非线性处理是一项巨大的挑战。非线性层过多会出现梯度消失或梯度爆炸的问题，因此，有时
@@ -133,7 +134,108 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 ，但未来不可知的随时间变化的变量，包括井口温度，油压，套压，日产量等。最右侧的$x_{t+1}$到$x_{t+\tau_{max}} $代表的是从过去$t-k$到未来$t+\tau_{max}$时刻
 都可知的随时间变化的变量，包括已经投产的天数，每日开井时长等。
 
-其中静态变量$S$需要经过静态协变量编码器来整合来自静态元数据的信息。具体地，本文使用\ref{cha:GRN}所展示的门控残差网络来编码产生两种不同的上下文向量：$\mathbf{c}_h$
-和$\mathbf{c}_e$。其中，$\mathbf{c}_h$将传入时间特征的局部处理层作为GRU的初始输入，$\mathbf{c}_e$将作为静态富集层的一部分。
+其中静态变量$S$需要经过静态协变量编码器来整合来自静态元数据的信息。具体地，本文使用\ref{cha:GRN}所展示的门控残差网络来编码产生上下文向量$\mathbf{c}_h$
+，$\mathbf{c}_h$将传入时间特征的局部处理层作为GRU的初始输入。
 \subsection{时间特征处理层}
+在时间序列的数据中，重要的点例如异常、变化点或者周期性模式一般都是根据他们周围的值来识别的。通过编码时间序列能够在序列中记忆和使用先前的信息，增强局
+部上下文，从而提高基于注意力架构模型的性能。本文将采用序列到序列层来进行时间序列编码，TFT使用LSTM来对时间序列进行编码，但是LSTM参数量相对较多，其包
+括更多的门控单元。这会导致在训练和推理过程中需要更多的计算资源，特别是气井数据集的规模较大。尽管LSTM设计用来更好地捕捉长期依赖关系，但有时候它会
+受到梯度消失或爆炸的影响，导致难以有效地学习长期依赖，这可能需要额外的技巧或者调整来解决。基于以上痛点，本文使用GRU来对时间序列进行编码。
+GRU具有更简单的结构，它合并了LSTM的遗忘门和输入门，因此参数数量较少。这使得GRU在训练和推理过程中的计算效率更高。且其有更快的训练速度，。这使得在大规
+模数据集上进行实验和调整参数时更加高效。我们将过去的输入序列$\bm{\xi}_{t-k:k}$提供给编码器，将未来的输入序列$\bm{\xi}_{t+1:t+\tau_{max}}$
+提供给解码器。使用GRU生成一组均匀的时间特征，作为下一阶段的输入，用$\phi (t,n)$来表示，
+其中$\phi(t,n) \in {\phi(t, -k), \ldots, \phi(t, T_{\text{max}})}$，$n$是位置指标。这种方式也可以完美处理观测到的过去和未来的输入不同而
+存在的差异。同时，为了让静态数据也参与到时间序列变量的编码中，我们使用$\mathbf{c_h}$上下文向量初始化第一个GRU的隐藏状态。在此处也使用门控跳跃链接：
+\begin{equation}
+    \tilde{\bm{\phi}}(t, n) = \text{LayerNorm}\left(\tilde{\bm{\xi}}_{t+n} + \text{GLU}_{\tilde{\phi}}(\bm{\phi}(t, n))\right)
+\end{equation}
+其中$n \in [ -k, \tau_{\max}]$是位置指标。
+\subsection{时域注意力层}
+在进行GRU编码后，我们采用自注意力来学习不同时间步之间的长期关系。传统的多头注意力每个头使用不同的值，仅通过权重注意力本身并不能指示特定特征的重要性，此处
+在传统多头注意力的基础上共享V。具体如下：
+一般来说，注意力机制基于键矩阵\( K \in \mathbb{R}^{N \times d_{\text{attn}}} \)和查询矩阵\( Q \in \mathbb{R}^{N \times d_{\text{attn}}} \)
+之间的关系对值\( V \in \mathbb{R}^{N \times d_v} \)进行缩放：
+\begin{equation}
+    \text{Attention}(Q, K, V) = A(Q,K)V
+\end{equation}
+其中$A()$是一个归一化函数，\( N \) 是进入注意力层的时间步数（即 \( k + t_{\text{max}} \)）。常用的选择是缩放点积注意力：
+\begin{equation}
+    A(Q, K) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_{\text{attn}}}}\right)
+\end{equation}
+为了提高注意力机制的学习能力，Vaswani于2017年提出了多头注意力，使用不同的头针对不同的表示子空间：
+\begin{equation}
+    \text{MultiHead}(Q, K, V) = [H_1, \ldots, H_m]W_H
+\end{equation}
+\begin{equation}
+    H_h = \text{Attention}(QW^Q_{(h)}, KW^K_{(h)}, VW^V_{(h)})
+\end{equation}
+其中\( W^K_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^Q_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^V_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_v} \) 
+是针对键、查询和值的头特定权重 \( W_H \in \mathbb{R}^{m \cdot h \times d_{\text{model}}} \) 用于将所有头输出合并。
+为了展示特定特征的重要性，做出的修改如下：
+\begin{equation}
+    \text{InterpretableMultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \tilde{\mathbf{H}} \mathbf{W}_h
+\end{equation}
+\begin{equation}
+    \begin{aligned}
+        \mathbf{\tilde{H}} &= \tilde{A}(\mathbf{Q}, \mathbf{K}) \mathbf{V} \mathbf{W}_v, \\
+        &= \left\{ \frac{1}{m_H} \sum_{h=1}^{m_H} A(\mathbf{Q} \mathbf{W}_Q^{(h)}, \mathbf{K} \mathbf{W}_K^{(h)}) \right\} \mathbf{V} \mathbf{W}_v, \\
+        &= \frac{1}{m_H} \sum_{h=1}^{m_H} \text{Attention}(\mathbf{Q} \mathbf{W}_Q^{(h)}, \mathbf{K} \mathbf{W}_K^{(h)}, \mathbf{V} \mathbf{W}_v),
+    \end{aligned}        
+\end{equation}
+式中：$\mathbf{W}_v \in \mathbb{R}^{d_{\text{model}} \times d_v}$是跨所有头共享的值的权重，$\mathbf{W}_h \in \mathbb{R}^{d_{\text{attn}} \times d_{\text{model}}}$
+用于最终的线性映射。$\tilde{A}(\mathbf{Q}, \mathbf{K})$允许我们通过分析一组注意力权重来进行简单的可解释性研究。
 
+在进行了时间特征处理层之后，我们应用注意力层。将所有的时间特征组合成单一的矩阵即$\bm{\varPhi }(t) = \left[ \bm{\phi} (t, -k), \ldots, \bm{\phi }(t, \tau_{\text{max}}) \right]^T$
+并在每个时间点（$N = \tau _{max} + k + 1$）应用时域注意力:
+\begin{equation}
+    \mathbf{B}(t) = \text{InterpretableMultiHead}(\mathbf{\varPhi }(t), \mathbf{\varPhi }(t), \mathbf{\varPhi }(t)),
+\end{equation}
+生成了$\mathbf{B}(t) = \left[ \mathbf{\beta }(t, -k), \ldots, \mathbf{\beta }(t, \tau_{\max}) \right]$。在自注意力层之后，增加了一个额外
+的门控层来促进训练：
+\begin{equation}
+    \boldsymbol{\delta}(t, n) = \text{LayerNorm}(\boldsymbol{\phi }(t, n)) + \text{GLU}_{\boldsymbol{\delta}}(\boldsymbol{\beta}(t, n)).
+\end{equation}
+\subsection{position-wise前馈层}
+对自注意力层应用额外的非线性处理，此处依然使用门控残差网络：
+\begin{equation}
+    \boldsymbol{\psi}(t, n) = \text{GRN}_{\boldsymbol{\psi}}(\boldsymbol{\delta}(t, n))
+\end{equation}
+其中$ \text{GRN}_{\boldsymbol{\psi}}$的权重在整个层中共享。此处还应用了一个跳过整个transformer块的残差连接，为序列到序列层提供了直接的路径。
+倘若不需要额外的复杂性，就可以得到一个更简单的模型。如下所示：
+\begin{equation}
+    \tilde{\boldsymbol{\psi}}(t, n) = \text{LayerNorm}(\tilde{\boldsymbol{\phi}}(t, n)) + \text{GLU}_{\tilde{\boldsymbol{\psi}}}(\tilde{\boldsymbol{\psi}}(t, n))
+\end{equation}
+\subsection{分位数预测层}
+借鉴了MQRNN框架的思路，本文采用分位数回归预测作为模型的输出方式。具体来说就是回归模型在对目标产量进行预测的时候不只预测$y$的一个期望值$\hat{y}$，
+而是预测出$y$的概率分布中不同百分位数（如10\%,50\%,90\%）的值。分位数预测是根据上一步输出的线性变换生成的：
+\begin{equation}
+    \hat{\boldsymbol{y}}(q, t, \tau) = \mathbf{W}_q \tilde{\boldsymbol{\psi}}(t, \tau) + \mathbf{b}_q
+\end{equation}
+本文采用联合最小化分位数损失来训练模型，并将所有的分位数方法相加，具体如式\eqref{eq:loss}所示。
+\begin{equation}
+    \mathcal{L}(\Omega, \mathbf{W}) = \sum_{y_t \in \Omega} \sum_{q \in \mathcal{Q} } \sum_{\tau=1}^{\tau_{\max}} \frac{\text{QL}(y_t, \hat{\boldsymbol{y}}(q, t - \tau, t), q)}{M_{\tau_{\max}}}
+    \label{eq:loss}
+\end{equation}
+其中$\text{QL}(y,\hat{y},q)$为分位数损失，具体定义如下：
+\begin{equation}
+    \text{QL}(y, \hat{y}, q) = q(y - \hat{y})_+ + (1 - q)(\hat{y} - y)_+,
+\end{equation}
+在式\eqref{eq:loss}中，$\Omega$是包含M个样本的训练数据，$W$表示模型的权重，$\mathcal{Q}$是分位数的集合（用户可自行指定，本文使用$\mathcal{Q} = \{0.4, 0.6\}$）。
+\section{实验对比分析}
+\subsection{数据集描述与环境说明}
+基于transformer的气井产量预测算法会在第\ref{sec:datafoc}节提供的数据集上进行验证。本次实验的硬件环境为处理器Inter(R) Xeon(R) Silver 4261 cpu @ 2.10Hz，
+显卡GeForce RTX 3090，内存256G，磁盘1T，操作系统采用Windows 10，开发环境为Pycharm，Python环境为Anaconda-4.12.0 python=3.9。
+\subsection{评估指标}
+为了验证本章所提出的基于transformer的气井产量预测算法的有效性，使用两个指标用于评估。其中一个是平均绝对误差（Mean Absolute Error, MAE），其可以衡量
+预测值与实际值之间的平均绝对偏差。公式如式\eqref{eq:MAE}所示。
+\begin{equation}
+    MAE(y, y') = \frac{1}{n} \sum_{i=1}^{n} |y_i - y'_i|
+    \label{eq:MAE}
+\end{equation}
+另一个常用误差指标为累计产量的相对误差，公式如式\eqref{eq:RCPE}所示。
+\begin{equation}
+    RCPE = \frac{\sum_{i=1}^{n} |y_i| - \sum_{i=1}^{n} |y'_i|}{\sum_{i=1}^{n} |y_i|}
+    \label{eq:RCPE}
+\end{equation}
+上面两式中，$i$表示索引，用于遍历数据集中的每一个数据点。例如，如果我们有一个包含多个观测值的数据集，$i$就用来表示这些观测值的序号，从第一个观测值
+到第$n$个观测值。$y$表示真实值，也就是实际产量，$\hat{y}$表示预测值，也就是通过模型预测得到的产量。
