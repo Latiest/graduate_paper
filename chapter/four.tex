@@ -239,13 +239,90 @@ GRU具有更简单的结构，它合并了LSTM的遗忘门和输入门，因此�
 \end{equation}
 上面两式中，$i$表示索引，用于遍历数据集中的每一个数据点。例如，如果我们有一个包含多个观测值的数据集，$i$就用来表示这些观测值的序号，从第一个观测值
 到第$n$个观测值。$y$表示真实值，也就是实际产量，$\hat{y}$表示预测值，也就是通过模型预测得到的产量。
-\subsection{实验结果与对比分析}
-（1）对比实验
-根据前文所述，本问题需要同时对1000余口气井构建时间序列预测模型，且问题包含多种类型的协变量，因此选用基于注意力机制的seq2seq模型，lightGBM模型和TFT这三个可以
-解决这类问题的模型来进行对比实验。为了展示各算法的预测性能，选出3口井的产量数据作为测试集进行测试，分别是：SN0016-05， SN0004-04，SN0012-10。这3口
-井的近期平均产量分别位于大于2，1到2之间，小于1区间（单位：$10^4m^3$）。如表\ref{ta:compareTFT}所示。
-\begin{table}[H]
-    \centering
-    \caption{不同算法预测结果对比表}
+\subsection{LightGBM模型设计}
+根据前文所述，本问题需要同时对1000余口气井构建时间序列预测模型，且问题包含多种类型的协变量，由第一章的国内外研究现状可知，机器学习模型中，当前对于时间序列预测问题的主流选择是特征工程+LightGBM模型的方法，这也是当前各大时间序列竞赛中大多数获胜方案所采用的策略。
+下面将对LightGBM模型的设计做具体介绍。
 
+决策树模型可以用于回归预测任务，其基本原理是将输入变量空间划分成多个子空间，并在每个子空间内拟合一个简单的回归模型。在预测时，将输入数据映射到对应的子空间，并用该子空间内的回归模型来进行预测，从而得到最终的预测结果。
+
+集成树模型的原理是将多个弱学习器（例如决策树）组合成一个强学习器，从而提高预测的准确性和稳定性。在具体的实现中，集成树模型通常采用Bagging或Boosting的方法进行集成。其中Boosting是一种迭代式的方法，通过序列化训练多个决策树模型，每次训练的模型都会针对前一轮的错误进行优化，从而逐步提升模型的准确性。在Boosting中，还有一种著名的算法叫做梯度提升树（Gradient Boosting Tree），它通过在每轮迭代中拟合负梯度来进行模型训练。LightGBM（Light Gradient Boosting Machine）是一种基于决策树的梯度提升框架，是由微软亚洲研究院开发的。它具有高效性和准确性，尤其适用于处理大规模数据集。相较于其他梯度提升框架，LightGBM 在训练速度和内存使用方面具有优势。
+
+多步时间序列预测是指根据历史数据来预测未来多个时刻的数据，例如预测未来一周的天气或销量。要使LightGBM模型适应于多步时间序列预测，需要进行以下几个步骤：
+
+数据准备：对于本问题，需要将历史产气量数据按照气井号和时间顺序进行排序，并且将数据集划分为训练集，验证集和测试集。同时，需要对静态协变量和随时间变化的协变量进行特征工程处理。
+数据准备过程分为数据清洗和数据划分，数据清洗如\ref{cha:data}所述，数据划分部分选取每口井最后一段forecast horizon长度的气井产量数据作为测试集（forecast horizon指要预测的长度，如对未来45天的每日产气量进行
+预测），选取倒数第二个forecast horizon长度的气井产量数据作为验证集，验证集用来调整lightGBM模型的超参数，其余数据用作测试集。
+
+对时间序列数据进行特征工程，抽取延迟特征、滑动窗口特征等。在该问题中，所选取的静态特征包括，集气站号Station，井丛号Cluster，气井号WellNo，配产量Allocation，其余特征包括表示时间的整数Elapsed，这个整数值通过当前日
+期与数据集第一天的日期差计算得到，表示气井生产时长的整数值ElapsedProduction，通过当前日期与气井投产日期的日期差计算得到，当日开井时间DailyHour，延迟特征Lag1到Lag30，其中延迟特征Lagi表示当前日期前i天的产气量，即使
+用过去的产气量数据预测未来产气量（这里以预测未来7天的产气量为例，使用过去30天的数据预测未来7天的产气量），滑动特征RollingMean7,RollingStd7,……,RollingMean180, RollingStd180,其中RollingMeani和RollingStdi分
+别表示过去i天产气量数据的均值和方差，i取{7，15，30，60，180},通过Rolling特征提取历史产气量数据的数值信息。这里具体使用过去多长时间的历史数据对未来进行预测通常根据经验选取，通常这个长度在forecast horizon到2*forecast horizon之间。
+进行特征工程后，构造训练数据，将每个时刻的产气量作为目标值和对应的特征作为一条样本。
+\begin{figure}[H]
+    \centering
+    \caption{一条样本所包含的特征}
+    \includegraphics{figure/asamplefeature.png}
+\end{figure}
+如图\ref{fig:singlesample}表示一条训练样本（再加上进行特征工程Lag和Rolling特征），DailyProduction表示当日产气量，为目标值。
+\begin{figure}[H]
+    \centering
+    \caption{单条样本示意图}
+    \includegraphics{figure/singlesample.png}
+    \label{fig:singlesample}
+\end{figure}
+调整LightGBM模型的参数，根据不同
+的目标函数、评价指标、学习率、树的深度、叶子节点数等进行手动或自动调优。最终模型选择超参数如图\ref{fig:LightGBMSuper}所示，使用huber损失函数，MAE作为指标来对模型预测效果拟合效果进行评价。
+\begin{figure}[H]
+    \centering
+    \caption{LightGBM模型所选取的超参数}
+    \includegraphics{figure/LightGBMsuper.png}
+    \label{fig:LightGBMSuper}
+\end{figure}
+其中huber损失函数的定义如式\eqref{eq:huber}所示。
+\begin{equation}
+    L_{\delta}(y, f(x)) = 
+        \begin{cases} 
+        \frac{1}{2}(y - f(x))^2, & \text{if } |y - f(x)| \leq \delta \\
+        \delta|y - f(x)| - \frac{1}{2}\delta^2, & \text{if } |y - f(x)| > \delta
+        \end{cases}
+    \label{eq:huber}
+\end{equation}
+在中，\(f(x)\)为预测值，δ为Huber损失函数的参数，δ接近0时，
+Huber损失趋向于MAE。δ越大时，Huber损失趋向于MSE，在梯度下降时 MSE较MAE更为准确。而在异常值出现时 MAE较MSE更加鲁棒。Huber损失函数集中了两者的优势。这里MAE损失的定义为
+\[MAE = |y - f(x)|,\]
+MSE损失的定义为
+\[MSE = (y - f(x))^2.\]
+
+确定训练样本和模型超参数后，即可进行LightGBM模型的训练过程。在推理阶段，使用训练好的模型对于任一指定气井未来一段时间内的单日产气量做出预测。
+
+在训练好的模型中，通过递归预测的方式，预测未来若干天的产气量。具体地，从当前时刻开始，先用模型预测未来第一天的产气量，然后将预测结果作为已知量(未来第二天地Lag1特征)输入到模型中，再预测未来第二天的产气量，以此类推。
+\subsection{实验结果和对比分析}
+（1） 对比模型选择
+根据前文所述，本问题需要同时对1000余口气井构建时间序列预测模型，且问题包含多种类型的协变量，因此初步选取基于注意力机制的seq2seq模型，lightGBM模型、TFT模型以及本文的模型这四个可以解决这类问题的模型进行实验。
+经过对手头的单井日报数据进行处理，累计10年，1000余口气井约有总共约有160多万条数据。为了展示各算法的预测性能，选出3口井的产量数据作为测试集进行测试，分别是：SN0016-05， SN0004-04，SN0012-10。这3口井的近期
+平均产量分别位于大于2，1到2之间，小于1区间（单位：$10^4m^3$）.如表\ref{fig:modelselection}所示，基于注意力机制的seq2seq模型，由于模型结构限制，无法包含未来时刻的开关井信息，导致预测效果显著劣于其余三个模型。
+lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略优于TFT和lightGBM模型，预测时间本文模型优于TFT和lightGBM模型。但是在模型训练阶段，lightGBM模型(10min)显著快于TFT模型(4h)及本文(2h)。故最终保留
+本文中的模型、lightGBM模型和TFT模型。
+\begin{table}
+    \renewcommand{\arraystretch}{1.5}
+    \caption{模型选择实验结果}
+    \label{ta:modelselection}
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{测试对象} & \textbf{模型} & \textbf{MAE($10^4 \ m^3$)} & \textbf{RCPE(\%)} & \textbf{预测时间(s)} \\ \hline
+        SN0016-05         & TFT          & 0.241                       & 3.14              & 8.369                \\ \hline
+                          & LightGBM     & 0.262                       & 3.80              & 0.89                 \\ \hline
+                          & Seq2seq      & 0.512                       & 10.25             & 5.25                 \\ \hline
+                          & Ours         & 0.225                       & 3.02              & 7.29                 \\ \hline
+        SN0004-04         & TFT          & 0.041                       & 1.39              & 12.9                 \\ \hline
+                          & LightGBM     & 0.043                       & 1.40              & 0.92                 \\ \hline
+                          & Seq2seq      & 0.132                       & 7.89              & 6.22                 \\ \hline
+                          & Ours         & 0.036                       & 1.36              & 12.1                 \\ \hline
+        SN0012-10         & TFT          & 0.103                       & 24.8              & 13.52                \\ \hline
+                          & LightGBM     & 0.112                       & 27.0              & 1.03                 \\ \hline
+                          & Seq2seq      & 0.153                       & 30.1              & 6.34                 \\ \hline
+                          & Ours         & 0.095                       & 24.1              & 13.16                \\ \hline
+    \end{tabular}
 \end{table}
+
