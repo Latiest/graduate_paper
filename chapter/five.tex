@@ -83,23 +83,18 @@ SQL数据集可以通过SQL语句和从已有的数据连接中获取返回结�
     \includesvg{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/权限管理/权限管理.svg}
 \end{figure}
 \subsection{系统非功能性需求}
-上文中对系统进行了总体需求分析和功能需求分析，但除了对必要的功能进行需求分析之外，气井智能管控系统还需要在性能、易用性、可靠性等非功能的需求方面保障用户的使用体验。
+上文中对系统进行了总体需求分析和功能需求分析，但除了对必要的功能进行需求分析之外，气井智能管控系统还需要在响应时间、易用性等非功能的需求方面保障用户的使用体验。
 
-（1）性能需求
+（1）响应时间
 
-性能需求是指系统处理请求并返回结果的总耗时，在实际开发中，一般要求在一定时间内完成。对于系统的响应时间，通常会要求在3000毫秒内完成。此处要求一般任务可以在500ms内完成。性能需求还包括重复率，即在一定时间内，系统对于同一请求的处理不应超过一定比例，此处要求其不超过15\%。可以保证系统在处理同一请求时具有一定的稳定性和一致性，不会因为频繁的重复请求而导致性能下降或系统崩溃。
-本项目最耗时的部分为数据导入、更新和智能分析部分。此处要求单个气井的数据的导入时间不超过0.5h，并可允许同时有5个气井数据进行导入/更新；智能分析模块中，气井预测和自定义数据分析可能耗时较久，此处要求气井预测时间不超过10s，
-自定义数据分析可能会根据不同的任务有不同的响应时间，此处要求在一百万级数据、4个步骤的情况下，分析任务的完成时间不应超过60s。
+性能需求是指系统处理请求并返回结果的总耗时，在实际开发中，一般要求在一定时间内完成。对于系统的响应时间，通常会要求在3000毫秒内完成。此处要求一般任务可以在500ms内完成。
+本项目最耗时的部分为数据导入、更新和智能分析部分。此处要求单个数据集的导入时间不超过0.5h，并可允许同时有5个气井数据进行导入/更新；智能分析模块中，气井预测可能耗时相对较久，此处要求气井预测时间不超过10s，
 
-（2）可靠性
-
-可靠性是指系统在各种条件下持续、正确地执行其功能的能力。一个可靠的系统能够在长时间运行中保持稳定性，不会频繁崩溃或出现故障，并能够在面对异常情况时自动恢复正常运行状态。此处通过建立多个数据连接通道，实施数据备份的策略，确保即使某一连接出现问题，系统仍能稳定获取数据。
-使用多级权限控制来避免员工进行未经授权的操作和信息泄露。通过清晰直观的可视化方式来实时展示数据，及时发现异常和变化。
 
 （3）易用性
 
 系统的易用性是指用户在使用系统时的感受和体验，主要体现在用户能够轻松地学习、理解、操作系统，以及完成任务的效率和满意度。企业员工大多数计算机基础薄弱，因此系统提供了简洁明了的前端界面让用户进行数据管理和数据分析操作，可以让他们在不了解数据库、算法的前提下也能较快进行自己想要的操作。
-同时提供了友好的反馈机制，能够及时给予用户反馈，包括操作结果、错误提示、进度指示等，让用户清楚地了解当前状态和下一步行动。并提供了详细的帮助文档，当用户遇到高频问题时点击文档有助于其解决问题。
+同时提供了友好的反馈机制，能够及时给予用户反馈，包括操作结果、错误提示、进度指示等，让用户清楚地了解当前状态和下一步行动。
 \section{系统总体设计}
 根据前文的系统需求分析，系统主要分为四个模块：数据连接、数据管理、智能分析和用户权限。为了描述清楚系统内部各模块和组件之间的相互关系，此处将系统分为多个层次，通过系统架构图的方式，图形化地展示系统的实现模式
 和工作模式。具体如图\ref{fig:sysstruc}所示。
@@ -224,6 +219,7 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 %     \end{tabular}
 %     \label{tab:systestsoen}
 % \end{table}
+
 \subsection{系统功能性测试}
 本小节从系统功能性需求出发，为每个模块设计测试用例和场景并记录结果。
 
@@ -231,10 +227,11 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 
 数据连接管理模块主要包括新建数据连接、删除数据连接、编辑数据连接和测试
 连接四个功能，其测试用例如表\ref{tab:testcon}所示。
-\begin{table}[h!]
+\begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
-    \begin{tabular}{|c|c|c|c|}
+    \caption{数据连接测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
         \hline
         编号 & 用例说明 &  测试步骤 & 预期结果 \\
         \hline
@@ -245,11 +242,216 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         3 & 编辑数据连接 & 选择一个数据连接，修改其参数配置并提交 & 编辑数据连接成功 \\
         \hline
         4 & 测试数据连接 & 选择一个数据连接，选择测试按钮 & 测试这个数据连接当前是否是成功的 \\
-    \end{tabular}
-    \caption{用例详细信息}
+        \hline
+    \end{tabularx}
+    \label{tab:testcon}
 \end{table}
-根据表\ref{tab:testcon}的测试内容，可以在数据连接页面进行创建、删除、编辑和测试连接等操作。
+根据表\ref{tab:testcon}的测试内容，可以在数据连接页面进行创建、删除、编辑和测试连接等操作。图\ref{fig:login}为系统的登陆界面。图\ref{fig:dataconre}为数据连接的界面。
+\begin{figure}[H]
+    \centering
+    \caption{气井智能管控系统登陆界面}
+    \includegraphics[width=.8\linewidth]{figure/login.pdf}
+    \label{fig:login}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{数据连接界面}
+    \includegraphics[width=.8\linewidth]{figure/数据连接.pdf}
+    \label{fig:dataconre}
+\end{figure}
 
+（2） 数据管理
+
+由前文可知数据管理分为目录管理、数据集管理和数据集更新。其中目录管理测试用例如表\ref{tab:direte}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{目录管理测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 & 测试步骤 & 预期结果 \\
+        \hline
+        5 & 新建目录 & 点击新建目录并命名 & 新建目录成功 \\
+        \hline 
+        6 & 重命名目录 & 选择现有的一个目录并将其改成一个新名字 & 目录改名成功 \\
+        \hline
+        7 & 删除目录 & 选择一个目录并将其删除 & 目录及其下面的数据集等都被删除 \\
+        \hline
+    \end{tabularx}
+    \label{tab:direte}
+\end{table}
+目录管理的实现如图\ref{fig:dirre}所示。
+\begin{figure}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{目录管理界面}
+    \includegraphics[scale=0.22,angle=0]{figure/目录管理.pdf}
+    \label{fig:dirre}
+\end{figure}
+数据集管理分为新建数据集、浏览数据集和复制数据集，其测试用例如表\ref{tab:dasette}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{数据集管理测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 & 测试步骤 &预期结果 \\
+        \hline
+        8 & 新建数据集 & 点击新建数据集按钮，选择要创建的数据集种类，并根据种类配置参数 & 创建数据集成功 \\
+        \hline
+        9 & 浏览数据集 & 点进具体的数据集，浏览里面的数据 & 数据集里面的数据成功显示在前端 \\
+        \hline
+        10 & 复制数据集 & 选择数据集，将数据集复制到新的目录下面 & 数据集复制成功 \\
+        \hline
+    \end{tabularx}
+    \label{tab:dasette}
+\end{table}
+数据集管理的实现结果如图\ref{fig:dasetre}所示。
+\begin{figure}[H]
+    \centering
+    \caption{数据集管理界面}
+    \includegraphics[scale=0.22,angle=0]{figure/数据集管理.pdf}
+    \label{fig:dasetre}
+\end{figure}
+数据集更新分为新建、修改、删除定时/周期任务，其测试用例如表\ref{tab:updatete}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{数据集更新测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 &测试步骤 & 预期结果 \\
+        \hline
+        11 & 新建定时/周期任务 & 点击新建定时/周期任务并选取相应的参数创建任务 & 新建任务成功 \\
+        \hline
+        12 & 修改定时/周期任务 & 选择某一任务，对其参数包括时间等修改 & 修改任务成功 \\
+        \hline
+        13 & 删除定时/周期任务 & 选择某一任务，点击删除任务按钮将其删除 & 删除成功 \\
+        \hline
+    \end{tabularx}
+    \label{tab:updatete}
+\end{table}
+数据集更新的实现如图\ref{fig:updatere}所示。
+\begin{figure}[H]
+    \centering
+    \caption{数据集更新界面}
+    \includegraphics[scale=0.3,angle=0]{figure/数据集操作.pdf}
+    \label{fig:updatere}
+\end{figure}
+
+（3）智能分析
+
+智能分析包括气井分类、产气量预测和开关井推荐，其中气井分类测试用例如表\ref{tab:clusterte}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{气井分类测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 & 测试步骤 & 预期结果 \\
+        \hline
+        14 & 获取所有气井分类结果 & 进入气井分类页面，获取所有气井分类结果，并可以在三维坐标上展示 & 获取结果成功 \\
+        \hline
+        15 & 获取单个气井分类结果 & 选择气井号，提交以后获得分类结果 & 获取结果成功 \\
+        \hline
+    \end{tabularx}
+    \label{tab:clusterte}
+\end{table}
+气井分类的界面如图\ref{fig:clusterre}所示。
+\begin{figure}[H]
+    \centering
+    \caption{气井分类界面}
+    \includegraphics[scale= 0.22,angle=0]{figure/气井分类.jpg}
+    \label{fig:clusterre}
+\end{figure}
+产气量预测的测试用例如表\ref{tab:predite}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{产气量预测测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 & 测试步骤 & 预期结果 \\
+        \hline
+        16 & 预测产气量 & 选取气井号，并选择想要预测的步长，得到最终预测结果 & 成功预测产气量 \\
+        \hline
+        17 & 模型效果检验 & 选择气井号以及预测步长，得到其真实值与预测值曲线之间的差异 & 检验成功 \\
+        \hline
+    \end{tabularx}
+    \label{tab:predite}
+\end{table}
+产气量预测的界面如\ref{fig:prere}所示。
+\begin{figure}[H]
+    \centering
+    \subfloat[预测产气量]{\includegraphics[width=.22\linewidth]{figure/产气量预测_预测.pdf}%
+    \label{pre}}
+    \hfil
+    \subfloat[模型效果]{\includegraphics[width=.22\linewidth]{figure/产气量预测_模型效果检验.pdf}%
+    \label{model}}
+    \caption{产气量预测界面}
+    \label{fig:prere}
+\end{figure}
+开关井推荐的测试用例如表\ref{tab:opente}所示。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{开关井推荐测试用例}
+    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+        \hline
+        编号 & 用例说明 &测试步骤 &结果预期 \\
+        \hline
+        18 & 开关井推荐 & 用户输入目标产量及压力阈值，并根据选定的不能开的等条件作出开关井推荐 & 获得开关井推果，并具体展示集气站产量以及每天需要开关的井等 \\
+        \hline
+    \end{tabularx}
+    \label{tab:opente}
+\end{table}
+开关井推荐的界面如图\ref{fig:openre}所示。
+\begin{figure}[H]
+    \centering
+    \caption{开关井推荐界面}
+    \label{fig:openre}
+    \subfloat[可视化展示]{\includegraphics[width=.22\linewidth]{figure/开关井预测-图片.pdf}%
+    \label{open}}
+    \hfil
+    \subfloat[分别到集气站的产量]{\includegraphics[width=.22\linewidth]{figure/开关井推荐-各集气站产量.pdf}%
+    \label{station}}
+    \hfil
+    \subfloat[每日需开关的井]{\includegraphics[width=.22\linewidth]{figure/开关井推荐-每日变化展示.pdf}%
+    \label{dailyopen}}
+\end{figure}
+\subsection{系统非功能性测试}
+功能性测试关注于验证实现的功能是否满足用户需求。与之相对地，本节将进行系统的非功能性测试，旨在评估系统的可靠性和安全性。本节主要对系统中的部分功能模块进行响应时间的测试。根据系统的功能模块划分，通过进行多轮测试实验并计算其平均值，确保了测试结果的准确性与
+可靠性。
+系统主要功能的响应时间测试结果将展示在表\ref{tab:timte}中。
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{系统响应时间测试}
+    \begin{tabularx}{\textwidth}{|c|Y|c|c|c|}
+        \hline
+       操作内容& 操作类型 & 响应结果1 & 响应结果2 & 响应结果3 \\
+       \hline
+       登陆 & 用户输入账号密码登陆系统 & 144ms & 132ms & 129ms \\
+       \hline
+       数据连接 & 用户进入数据连接界面，新建、删除、编辑、测试数据连接 & 288ms & 279ms &293ms \\
+       \hline
+       目录管理 & 用户进入数据管理页面，对目录进行新建、重命名、删除操作 & 233ms & 249ms & 251ms \\
+       \hline
+       数据集管理 & 用户进入数据集页面，对数据集进行新建、浏览、复制等操作 & 322ms & 334ms & 319ms \\
+       \hline
+       数据集更新 & 用户通过新建、修改、删除定时/周期任务来对数据集进行更新 & 266ms &279ms &253ms \\
+        \hline
+        气井分类 & 用户获得所有气井和单个气井分类的结果 & 151ms & 147ms & 138ms\\ 
+        \hline 
+        产气量预测 & 用户进行产气量预测和模型检验 & 7.2s & 9.8s & 8.3s \\
+        \hline
+        开关井推荐 & 系统根据用户的目标产量及压力阈值生成开关井策略 & 0.93min & 1.24s & 1.09s \\
+        \hline
+    \end{tabularx}
+\end{table}
+由表可知，一些基础操作的响应时间都在400ms以内，产气量预测和开关井算法由于算法的复杂性会需要一定的时间，但依然在用户可接受范围内。
+\subsection{本章小节}
+本章节对系统需求进行了详细梳理，并结合先前讨论的算法以及油田企业对数据的具体需求，设计并实施了一套系统。本文对系统的功能性需求和非功能性需求均进行了全面测试，确保系统运行效果符合预期标准。
 
 
 

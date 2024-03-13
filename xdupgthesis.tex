@@ -2,8 +2,15 @@
 \usepackage[commentColor=black,beginComment=//~,beginLComment=//~,endLComment=]{algpseudocodex}
 \usepackage{svg}
 \usepackage{pdfpages}
+\usepackage{tabularx, array}
+\usepackage{makecell}
+\renewcommand\theadalign{bc} % 让表头内容垂直、水平居中
+\renewcommand\theadfont{\bfseries} % 表头字体加粗
+\renewcommand\theadgape{\Gape[4pt]} % 表头间隙
+\renewcommand\cellgape{\Gape[4pt]} % 单元格间隙
 \algrenewcommand{\algorithmicrequire}{\textbf{输入：}}
 \algrenewcommand{\algorithmicensure}{\textbf{输出：}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X} % 定义一个新的列类型
 % \xdusetup{
 %     style = {
 %         algorithm-small-caption =true,
