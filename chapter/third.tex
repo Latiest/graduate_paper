@@ -158,8 +158,20 @@ Monetary (M)：平均开井产量。在传统RFM模型中代表消费金额，�
 在进行核密度估计时，核函数与带宽的选取显得至关重要。核函数负责定义估计密度时每个观测点周围的贡献形状，而带宽则控制这种贡献的范围或“平滑度”。具体地，核函数的选择影响估计结果的细腻程度，而带宽的大小则决定了估计曲线的平滑程度和波动宽度。适当的核函数和带宽选择是确保密度估计准确反映数据特征的关键。
 
 在确定了合适的核函数和带宽后，本文通过核密度估计，获得了一个连续的密度函数。得到的核密度函数如图\ref{fig:KDE}所示。
-
-
+\begin{figure}[H]
+    \centering
+    \subfloat[开井近度]{\includegraphics[width=.3\linewidth]{figure/R_z_kde.pdf}%
+    \label{R}}
+    \hfil
+    \subfloat[开井频度]{\includegraphics[width=.3\linewidth]{figure/F_z_kde.pdf}%
+    \label{F}}
+    \hfil
+    \subfloat[平均开井产量]{\includegraphics[width=.3\linewidth]{figure/M_z_kde.pdf}%
+    \label{M}}
+    \caption{核密度函数结果}
+    \label{fig:KDE}
+\end{figure}
+\par
 此后，通过在数据范围内设立一个均匀分布的网格，并在该网格上计算各点的密度值，可以识别出密度最大的点，即密度峰值。这一峰值在本文中被用作划分阈值，是区分高低或远近气井类别的依据：若某一参数值低于该阈值，则该气井被划分为“近（低）”类别；相反，如果高于该阈值，则归为“远（高）”类别。
 具体如表\ref{table:KDE}所示。
 \begin{table}[H]
@@ -168,7 +180,7 @@ Monetary (M)：平均开井产量。在传统RFM模型中代表消费金额，�
     \caption{气井分类模型及类型定义}
     \begin{tabular}{|c|c|c|c|c|}
     \hline
-    开井距度 & 开井频次 F & 开井产量 M & 分类标准       & 生产价值类别   \\ \hline
+    开井近度 R & 开井频次 F & 开井产量 M & 分类标准       & 生产价值类别   \\ \hline
     近       & 高       & 高       & 近高高       & 非常有价值 \\ \hline
     远       & 高       & 高       & 远高高       & 不活跃有价值 \\ \hline
     近       & 低       & 高       & 近低高       & 高潜力有价值 \\ \hline
@@ -183,7 +195,7 @@ Monetary (M)：平均开井产量。在传统RFM模型中代表消费金额，�
 通过以上步骤，将气井数据分为8类，每类气井具有不同的生产价值类型和KPI战术意义。对分类结果进行分析和评估，可以为气井的运营管理提供有针对性的建议。
 例如，活跃高价值气井（近高高）应提高开井时率以充分发挥其生产潜力；活跃一般价值气井（近高低）可通过实施工艺措施来提高产量；活跃一般潜力气井（近低低）则需关注提升措施的有效性，以提高气井的价值。  
 \section{分类结果}
-最终对1000余口气井进行分类的结果如图\ref{fig:classtable}所示。
+最终对1000余口气井进行分类的结果如表\ref{fig:classtable}所示。
 \begin{table}[h]
     \renewcommand{\arraystretch}{1.5}
     \centering

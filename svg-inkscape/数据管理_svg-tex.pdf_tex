@@ -1,0 +1,103 @@
+%% Creator: Inkscape 1.3.2 (091e20e, 2023-11-25), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file '数据管理_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{369.57403564bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,1.25617591)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{数据管理_svg-tex.pdf}}%
+    \put(0.51803636,1.22363466){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textbf{数据管理}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{数据管理_svg-tex.pdf}}%
+    \put(0.24533926,0.95072285){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}目录管理\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{数据管理_svg-tex.pdf}}%
+    \put(0.74050389,0.88578322){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}新建目录\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{数据管理_svg-tex.pdf}}%
+    \put(0.7262659,1.01565312){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}目录重命名\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{数据管理_svg-tex.pdf}}%
+    \put(0.74050389,1.14554171){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}删除目录\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{数据管理_svg-tex.pdf}}%
+    \put(0.23110124,0.623986){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}数据集管理\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{数据管理_svg-tex.pdf}}%
+    \put(0.7262659,0.49207738){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}新建数据集\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{数据管理_svg-tex.pdf}}%
+    \put(0.7262659,0.623986){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}元信息查看\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{数据管理_svg-tex.pdf}}%
+    \put(0.7262659,0.75589462){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}更新数据集\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{数据管理_svg-tex.pdf}}%
+    \put(0.23110124,0.28305296){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}数据集操作\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{数据管理_svg-tex.pdf}}%
+    \put(0.68263031,0.06333784){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}新建定时/周期任务\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{数据管理_svg-tex.pdf}}%
+    \put(0.68263031,0.209452){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}修改定时/周期任务\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{数据管理_svg-tex.pdf}}%
+    \put(0.68263031,0.35556616){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}删除定时/周期任务\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{数据管理_svg-tex.pdf}}%
+    \put(-0.0014705,0.5605199){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}用户\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.90495723){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.99830795){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,1.08151186){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.58837658){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.63911066){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.70810902){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.20685621){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.26773717){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{数据管理_svg-tex.pdf}}%
+    \put(0.4961497,0.33470616){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

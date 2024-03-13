@@ -1,4 +1,4 @@
 $pdf_mode = 5;
-$xelatex = 'xelatex -synctex=1';
+$xelatex = 'xelatex -synctex=1 -shell-escape';
 $clean_ext = 'aux bbl blg fdb_latexmk fls lof log lot out synctex(busy) synctex.gz toc xdv';
 @default_files = ('xdupgthesis');

@@ -1,0 +1,84 @@
+%% Creator: Inkscape 1.3.2 (091e20e, 2023-11-25), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file '智能分析_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{356.60655212bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.5888843)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{智能分析_svg-tex.pdf}}%
+    \put(0.51869223,0.55515974){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textbf{智能分析}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{智能分析_svg-tex.pdf}}%
+    \put(0.25426066,0.34803756){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}气井分类\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{智能分析_svg-tex.pdf}}%
+    \put(0.74923895,0.33962493){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}所有结果\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{智能分析_svg-tex.pdf}}%
+    \put(0.74923895,0.47422705){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}单井分类\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{智能分析_svg-tex.pdf}}%
+    \put(0.23950491,0.21342576){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}产气量预测\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{智能分析_svg-tex.pdf}}%
+    \put(0.70947662,0.06303839){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}单井产气量预测\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{智能分析_svg-tex.pdf}}%
+    \put(0.71974595,0.20292364){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}模型效果检验\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{智能分析_svg-tex.pdf}}%
+    \put(0.23950491,0.07672047){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}开关井推荐\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{智能分析_svg-tex.pdf}}%
+    \put(-0.00152397,0.14765181){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}用户\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{智能分析_svg-tex.pdf}}%
+    \put(0.51419147,0.35528989){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{智能分析_svg-tex.pdf}}%
+    \put(0.51419147,0.43310674){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{智能分析_svg-tex.pdf}}%
+    \put(0.51419147,0.17021195){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{智能分析_svg-tex.pdf}}%
+    \put(0.51419147,0.2227909){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}«包含»\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{智能分析_svg-tex.pdf}}%
+  \end{picture}%
+\endgroup%
