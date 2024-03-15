@@ -41,7 +41,7 @@
 \begin{figure}[H]
     \centering
     \caption{智能分析用例图}
-    \includesvg{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/智能分析/智能分析.svg}
+    \includegraphics[width=.7\linewidth]{figure/智能分析用例图.pdf}
     \label{fig:analyusecase}
 \end{figure}
 
@@ -53,58 +53,49 @@
 \begin{figure}[H]
     \centering
     \caption{数据连接用例图}
-    \includesvg{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/数据连接/数据连接.svg}
     \label{fig:dataconnectionusecase}
+    \includegraphics[width=.7\linewidth]{figure/数据连接用例图.pdf}
 \end{figure}
+
 （2）数据管理 
 
-数据管理包括对数据集进行目录管理、数据集管理以及对数据集操作。其中数据集管理包括新建数据集、更新数据集等。新建数据集可以通过数据库数据集，SQL数据集，文件数据集，上传文件等方式创建。其中数据库数据集为直接从已有的数据连接中选择的数据库中的表作为数据集。
-SQL数据集可以通过SQL语句和从已有的数据连接中获取返回结果作为数据集。
-文件数据集表示用户导入本地Excel文件，上传为数据集。
-上传文件表示用户导入本地其他类型的文件，上传为数据集。目录管理可以查看数据的各种结构关系。通过目录进入具体数据集后，可以对数据集进行预览，查看其关联流程，设置周期、定时任务等来处理一些特定任务。具体如\ref{fig:datamaucase}所示。
-\begin{figure}[H]
+数据管理包括对数据集进行目录管理、数据集管理以及对数据集更新。其中数据集管理包括新建数据集、浏览数据集等。
+\begin{figure}[h]
     \centering
     \caption{数据管理用例图}
-    \includesvg{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/数据管理/数据管理.svg}
     \label{fig:datamaucase}
+    \includegraphics[width=.6\linewidth]{figure/数据管理用例图 .pdf}
 \end{figure}
+新建数据集可以通过数据库数据集，SQL数据集，文件数据集，上传文件等方式创建。其中数据库数据集是直接从已有的数据连接中选择的数据库中的表作为数据集。
+SQL数据集可以通过SQL语句和从已有的数据连接中获取返回结果作为数据集。
+文件数据集表示用户导入本地Excel文件，上传为数据集。数据集更新主要包括对数据集手动更新或者通过定时/周期任务来更新。
+上传文件表示用户导入本地其他类型的文件，上传为数据集。目录管理可以查看数据的各种结构关系。具体如\ref{fig:datamaucase}所示。
 
-
-
-（4）用户权限管理
-
-用户权限可以极大地保护数据安全，减少内部风险提高工作效率。此处包含了用户管理和权限管理。用户管理是对企业的所有员工的个人信息职务等进行管理，权限管理是指对用户具体能被授权的资源和功能分配。该油田企业部门众多，由于组织架构的不同，一人同时在多个组织中担任职务。因此此处采用用户管理、部门管理、角色管理来进行人员管理。
-权限在管理上分为资源权限和功能权限，并且可以根据用户、角色和组织来批量分配权限，使得在权限分配时更易于操作。
-\begin{figure}[H]
-    \centering
-    \caption{用户权限管理用例图}
-    \includesvg{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/权限管理/权限管理.svg}
-\end{figure}
-\subsection{系统非功能性需求}
 上文中对系统进行了总体需求分析和功能需求分析，但除了对必要的功能进行需求分析之外，气井智能管控系统还需要在响应时间、易用性等非功能的需求方面保障用户的使用体验。
 
 （1）响应时间
 
-性能需求是指系统处理请求并返回结果的总耗时，在实际开发中，一般要求在一定时间内完成。对于系统的响应时间，通常会要求在3000毫秒内完成。此处要求一般任务可以在500ms内完成。
+在实际开发中，一般要求系统处理请求并返回结果的总耗时在一定时间内。对于系统的响应时间，通常会要求在3000毫秒内完成。此处要求一般任务可以在500ms内完成。
 本项目最耗时的部分为数据导入、更新和智能分析部分。此处要求单个数据集的导入时间不超过0.5h，并可允许同时有5个气井数据进行导入/更新；智能分析模块中，气井预测可能耗时相对较久，此处要求气井预测时间不超过10s，
-
 
 （3）易用性
 
 系统的易用性是指用户在使用系统时的感受和体验，主要体现在用户能够轻松地学习、理解、操作系统，以及完成任务的效率和满意度。企业员工大多数计算机基础薄弱，因此系统提供了简洁明了的前端界面让用户进行数据管理和数据分析操作，可以让他们在不了解数据库、算法的前提下也能较快进行自己想要的操作。
 同时提供了友好的反馈机制，能够及时给予用户反馈，包括操作结果、错误提示、进度指示等，让用户清楚地了解当前状态和下一步行动。
 \section{系统总体设计}
-根据前文的系统需求分析，系统主要分为四个模块：数据连接、数据管理、智能分析和用户权限。为了描述清楚系统内部各模块和组件之间的相互关系，此处将系统分为多个层次，通过系统架构图的方式，图形化地展示系统的实现模式
+根据前文的系统需求分析，系统主要分为三个模块：智能分析、数据连接和数据管理。
+
+为了描述清楚系统内部各模块和组件之间的相互关系，此处将系统分为多个层次，通过系统架构图的方式，图形化地展示系统的实现模式
 和工作模式。具体如图\ref{fig:sysstruc}所示。
+
+由图中可以看出，系统采用分层的架构设计，这些层相对独立，各自专注于实现自身的功能，而不会直接依赖于其他层次的实现细节。层与层之间通过暴露的接口进行交互，实现数据和控制流的传递。有助于降低系统内部的耦合度，即各个组件之间的依赖关系较弱，提高了系统的灵活性和可维护性。
+系统由底向上主要分为数据接入层，数据存储层、业务层和可视化层。下面是各个层的详细介绍。
 \begin{figure}[H]
     \centering
     \caption{气井智能管控系统架构图}
-    \includegraphics{figure/系统架构图.pdf}
+    \includegraphics[width=.9\linewidth]{figure/系统架构图.pdf}
     \label{fig:sysstruc}
 \end{figure}
-由图中可以看出，系统采用分层的架构设计，这些层相对独立，各自专注于实现自身的功能，而不会直接依赖于其他层次的实现细节。层与层之间通过暴露的接口进行交互，实现数据和控制流的传递。有助于降低系统内部的耦合度，即各个组件之间的依赖关系较弱，提高了系统的灵活性和可维护性。
-系统由底向上主要分为数据接入层，数据存储层、业务层和可视化层。下面是各个层的详细介绍。
-
 （1）数据接入层
 
 数据接入层负责将外部的异构数据导入到系统中，其中外部的异构数据源包括数据库数据（关系型数据库如SQL Server、MySQL；非关系型数据库HBase；外部文件数据CSV、XML、JSON等）。这些数据将通过Spark来导入到数据湖Apache Hudi中。
@@ -118,7 +109,8 @@ Spark提供了多种接口来对应不同的文件类型数据的导入。
 
 （3）业务层 
 
-业务层负责处理业务逻辑和功能实现。它包含了系统的核心功能模块，通过提供访问接口来解析用户的行为，并将其转化为系统内部的各种调用。在业务层中，不同的功能模块专注于各自的业务规则和业务对象之间的交互，执行完毕后将结果返回给可视化层。业务层采用高内聚、低耦合的系统设计思路，确保各个功能模块之间的独立性和可维护性，同时按照对扩展开放的原则进行设计，以保证整体业务的可扩展性。
+业务层负责处理业务逻辑和功能实现。它包含了系统的核心功能模块，通过提供访问接口来解析用户的行为，并将其转化为系统内部的各种调用。在业务层中，不同的功能模块专注于各自的业务规则和业务对象之间的交互，执行完毕后将结果返回给可视化层。
+业务层采用高内聚、低耦合的系统设计思路，确保各个功能模块之间的独立性和可维护性，同时按照对扩展开放的原则进行设计，以保证整体业务的可扩展性。
 业务层具体包含了数据连接、数据管理、智能分析、可视化展示和用户权限几个模块。
 
 （4）可视化层
@@ -129,13 +121,13 @@ Spark提供了多种接口来对应不同的文件类型数据的导入。
 \section{系统业务模块设计与实现}
 本节根据前文中提出的系统的业务模块，通过对重要的数据连接、数据管理和智能分析模块的实现类图进行详细的描述，介绍系统业务模块的设计。
 \subsection{数据连接模块}
-数据连接用于将目标数据源连接到系统中，接入系统中的目标数据源可以在后续的进行数据管理、数据分析等一系列操作。数据连接类型的类图如图\ref{fig:dataconnclass}所示。
-% \begin{figure}[H]
-%     \centering
-%     \caption{数据连接类型管理类图}
-%     \includepdf{/Users/latiestqiu/szQshare/SynologyDrive/DRAW/out/class_diagram/class_数据连接/class_数据连接.pdf}
-%     \label{fig:dataconnectypelass}
-% \end{figure}
+数据连接用于将目标数据源连接到系统中，接入系统中的目标数据源可以在后续的进行数据管理、数据分析等一系列操作。数据连接类型的类图如图\ref{fig:dataconneclass}所示。
+\begin{figure}[H]
+    \centering
+    \caption{数据连接类图}
+    \label{fig:dataconneclass}
+    \includegraphics[width=.9\linewidth]{figure/数据连接类图.pdf}
+\end{figure}
 当系统用户发起一个请求时，DataConnectionController负责接收这个请求并解
 析其中的参数。它随后会调用DataConnectionControllerService中定义的方法来执行具体的操作。DataConnectionControllerServiceImpl类实现了DataConnectionControllerService接口，它包含了系统
 的主要业务逻辑。用户访问数据连接页面时，系统会调用 findAllDataConnection()
@@ -157,17 +149,19 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 
 更新时，系统确保每个数据集同时只能有一个更新任务在进行。这是通过检查一个特殊的Map实现的，该Map确保每个数据集同时只有一个关联的更新任务正在运行。更新任务的执行是多线程的，使用了一个特定的线程池，该线程池可以调度周期性任务。对于一次性的手动更新，任务会直接提交给线程池执行。
 数据管理模块的类图如图\ref{fig:datamanageclass}所示。
-\begin{figure}[H]
-    \centering
-    \caption{数据管理模块类图}
-    \label{fig:datamanageclass}
-\end{figure}
+
 当前端发出请求时，DataManagementController将充当主要接口来处理并分析这些请求。目录和数据集的管理任务都通过DataSourceService接口完成，而数据集的具体动作则是由DatasetUpdateServiceImpl接口负责。在这种设置下，文件夹和数据集被看作是目录结构的元素，它们虽然共处一个层级，但通过不同的方式标记以区分。
 在实现方面，DirectoryServiceImpl和DatasetImpl分别实现了DataSourceService接口的具体职责，处理不同的数据管理需求。当用户进入数据管理页面时，系统首先会调用getTotalCatalog()方法来获得全部资源目录结构。通过makeRootDir()方法可以创建在根目录创建新的文件夹，此外，还可以对文件夹进行移动、删除、重命名等操作。
 通过文件夹进入到具体的数据集后，DatasetImpl的previewData()方法会将得到数据集的具体内容，前端通过与controller通信读取内容后经过处理，可以将预览数据集的结果显示在用户界面上。该处还支持用户通过establishDIYDataset()等方法上传自己的数据集、Excel文件、删除数据集等。
 在数据模型方面，我们区分了两种类型的信息实体：DirectoryInfo 代表目录节点，而 DatasetInfo 代表数据集节点。DatasetUpdateServiceImpl是对DatasetUpdateService接口的实现，当进入数据集的更新设置页面后，会先调用getDatasetUpdateInfo()方法来查看
 数据集已有的更新设置。随后可以通过setDatasetUpdateInfo()或setAllDatasetUpdateInfo()来修改一个或多个数据集的更新设置。修改完更新设置后，可以通过startDatasetUpdateTask()方法来启动一个更新任务，目前系统近支持
 全量更新。随后可以关闭更新任务。同时getAllDatasetUpdateInfo()方法也可以查看用户的所有数据集更新信息。
+\begin{figure}[H]
+    \centering
+    \caption{数据管理类图}
+    \label{fig:datamanageclass}
+    \includegraphics[width=.9\linewidth]{figure/数据管理类图.pdf}
+\end{figure}
 最后，为了实现数据的持久化，系统设计了三个映射类：DirectoryMapper、DatasetMapper 和 DatasetUpdateMapper，它们分别对应于目录管理、数据集管理和数据操作功能，确保所有相关数据都能被持久化存储并管理。
 系统的架构遵循Controller-Service-Mapper-Model模式，以上提及的各个类相互配合，一起完成数据连接模块的全部功能。
 \subsection{智能分析模块}
@@ -176,8 +170,9 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 智能分析模块的类图如图\ref{fig:analyclass}所示。
 \begin{figure}[H]
     \centering
-    \caption{智能分析模块类图}
+    \caption{智能分析类图}
     \label{fig:analyclass}
+    \includegraphics[width=.9\linewidth]{figure/智能分析类图.pdf}
 \end{figure}
 由于智能分析多是用Python进行算法实现，实现方式也在前文进行了介绍。因此当前端进入智能分析页面后，IntelligentAnalysisController接口会分析findAllCluster()的参数，然后在IntelligentAnalysisServiceImpl类中调用Python结果，通过WellMapper查询气井信息，最后将结果展示在首页。
 产气量预测与开关井推荐等也类似该方法。
@@ -251,12 +246,12 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
     \includegraphics[width=.8\linewidth]{figure/login.pdf}
     \label{fig:login}
 \end{figure}
-\begin{figure}[H]
-    \centering
-    \caption{数据连接界面}
-    \includegraphics[width=.8\linewidth]{figure/数据连接.pdf}
-    \label{fig:dataconre}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \caption{数据连接界面}
+%     \includegraphics[width=.8\linewidth]{figure/数据连接.pdf}
+%     \label{fig:dataconre}
+% \end{figure}
 
 （2） 数据管理
 
@@ -265,6 +260,7 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{目录管理测试用例}
+    \label{tab:direte}
     \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
         \hline
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
@@ -276,7 +272,6 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         7 & 删除目录 & 选择一个目录并将其删除 & 目录及其下面的数据集等都被删除 \\
         \hline
     \end{tabularx}
-    \label{tab:direte}
 \end{table}
 目录管理的实现如图\ref{fig:dirre}所示。
 \begin{figure}[H]
