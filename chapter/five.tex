@@ -1,7 +1,7 @@
 \chapter{系统设计与实现}
 本章根据企业的的痛点需求，设计并实现了一个气井智能管控系统，系统包含了第三章的
-结合RFM与核密度估计的气井分类算法和第四章的基于transformer的气井产量预测算法及开关井推荐。
-主要功能有数据连接，数据管理和智能分析等功能。
+结合RFM与核密度估计的气井分类算法和第四章的基于transformer的气井产量预测算法及开关井推荐算法。
+主要功能有数据连接，数据管理和智能分析等模块。
 \section{系统需求分析}
 \subsection{总体需求分析}
 陕西某油田企业作为行业的重要参与者，面临着诸多数字化建设方面的挑战。随着气井数量的增多以及老井的管理难度加大，需要按照气井全生命周期管理理念，引入机器学习、大数据分析等前沿技术，提升气井生产管理的研究决策质量和效率。其在数字化建设中主要遇到下列问题：
@@ -29,9 +29,9 @@
 如图\ref{fig:allmodules}所示。
 \begin{figure}[H]
     \centering
+    \includegraphics[width=.5\linewidth]{figure/systemincludemodles.pdf}
     \label{fig:allmodules}
     \caption{气井智能管控系统模块划分图}
-    \includegraphics[width=.8\linewidth]{figure/systemincludemodles.pdf}
 \end{figure}
 \subsection{系统功能性需求}
 （1）智能分析
@@ -40,8 +40,8 @@
 排除的不参与生产的井来进行开关井的推荐。
 \begin{figure}[H]
     \centering
-    \caption{智能分析用例图}
     \includegraphics[width=.7\linewidth]{figure/智能分析用例图.pdf}
+    \caption{智能分析用例图}
     \label{fig:analyusecase}
 \end{figure}
 
@@ -52,9 +52,9 @@
 其用例图如图\ref{fig:dataconnectionusecase}所示。
 \begin{figure}[H]
     \centering
-    \caption{数据连接用例图}
     \label{fig:dataconnectionusecase}
     \includegraphics[width=.7\linewidth]{figure/数据连接用例图.pdf}
+    \caption{数据连接用例图}
 \end{figure}
 
 （2）数据管理 
@@ -62,9 +62,9 @@
 数据管理包括对数据集进行目录管理、数据集管理以及对数据集更新。其中数据集管理包括新建数据集、浏览数据集等。
 \begin{figure}[h]
     \centering
+    \includegraphics[width=.6\linewidth]{figure/数据管理用例图 .pdf}
     \caption{数据管理用例图}
     \label{fig:datamaucase}
-    \includegraphics[width=.6\linewidth]{figure/数据管理用例图 .pdf}
 \end{figure}
 新建数据集可以通过数据库数据集，SQL数据集，文件数据集，上传文件等方式创建。其中数据库数据集是直接从已有的数据连接中选择的数据库中的表作为数据集。
 SQL数据集可以通过SQL语句和从已有的数据连接中获取返回结果作为数据集。
@@ -124,9 +124,9 @@ Spark提供了多种接口来对应不同的文件类型数据的导入。
 数据连接用于将目标数据源连接到系统中，接入系统中的目标数据源可以在后续的进行数据管理、数据分析等一系列操作。数据连接类型的类图如图\ref{fig:dataconneclass}所示。
 \begin{figure}[H]
     \centering
+    \includegraphics[width=.9\linewidth]{figure/数据连接类图.pdf}
     \caption{数据连接类图}
     \label{fig:dataconneclass}
-    \includegraphics[width=.9\linewidth]{figure/数据连接类图.pdf}
 \end{figure}
 当系统用户发起一个请求时，DataConnectionController负责接收这个请求并解
 析其中的参数。它随后会调用DataConnectionControllerService中定义的方法来执行具体的操作。DataConnectionControllerServiceImpl类实现了DataConnectionControllerService接口，它包含了系统
@@ -142,11 +142,9 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 数据库中数据连接实例信息表交互的接口。
 \subsection{数据管理模块}
 数据管理模块主要包括三个部分：目录管理、数据集管理和数据集更新。在目录管理中，主要任务是整理数据集的存储位置，确保它们正确归档在特定文件夹内。目录由不同的节点组成，包括文件夹和数据集本身，它们在目录中以不同的方式标记以便区分。保持这些节点之间的层次结构有助于形成一个有层次的目录结构。
-
 在数据集管理方面，我们可以创建、删除、复制和查看数据集，以便有效地管理它们。
 
 对于数据集更新，它允许数据集按计划或周期性地更新。更新可以是自动的，也可以是手动的。每个数据集都有一个关于如何更新的设置，如果用户未做设置，则使用默认配置。根据这些设置，平台会定期或按需更新数据集，并记录更新任务的详细信息和状态。
-
 更新时，系统确保每个数据集同时只能有一个更新任务在进行。这是通过检查一个特殊的Map实现的，该Map确保每个数据集同时只有一个关联的更新任务正在运行。更新任务的执行是多线程的，使用了一个特定的线程池，该线程池可以调度周期性任务。对于一次性的手动更新，任务会直接提交给线程池执行。
 数据管理模块的类图如图\ref{fig:datamanageclass}所示。
 
@@ -158,9 +156,9 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 全量更新。随后可以关闭更新任务。同时getAllDatasetUpdateInfo()方法也可以查看用户的所有数据集更新信息。
 \begin{figure}[H]
     \centering
+    \includegraphics[width=.9\linewidth]{figure/数据管理类图.pdf}
     \caption{数据管理类图}
     \label{fig:datamanageclass}
-    \includegraphics[width=.9\linewidth]{figure/数据管理类图.pdf}
 \end{figure}
 最后，为了实现数据的持久化，系统设计了三个映射类：DirectoryMapper、DatasetMapper 和 DatasetUpdateMapper，它们分别对应于目录管理、数据集管理和数据操作功能，确保所有相关数据都能被持久化存储并管理。
 系统的架构遵循Controller-Service-Mapper-Model模式，以上提及的各个类相互配合，一起完成数据连接模块的全部功能。
@@ -170,49 +168,58 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 智能分析模块的类图如图\ref{fig:analyclass}所示。
 \begin{figure}[H]
     \centering
+    \includegraphics[width=.9\linewidth]{figure/智能分析类图.pdf}
     \caption{智能分析类图}
     \label{fig:analyclass}
-    \includegraphics[width=.9\linewidth]{figure/智能分析类图.pdf}
 \end{figure}
-由于智能分析多是用Python进行算法实现，实现方式也在前文进行了介绍。因此当前端进入智能分析页面后，IntelligentAnalysisController接口会分析findAllCluster()的参数，然后在IntelligentAnalysisServiceImpl类中调用Python结果，通过WellMapper查询气井信息，最后将结果展示在首页。
+由于智能分析多是用Python进行算法实现，具体实现算法已经在前文进行了介绍。因此当前端进入智能分析页面后，IntelligentAnalysisController接口会分析findAllCluster()的参数，然后在IntelligentAnalysisServiceImpl类中调用Python结果，通过WellMapper查询气井信息，最后将结果展示在首页。
 产气量预测与开关井推荐等也类似该方法。
 \section{系统测试}
 \subsection{测试环境说明}
-气井智能管控系统的测试环境分为硬件环境和软件环境，表\ref{tab:systesthaen}所示为气井智能管控系统的硬件测试环境.其中硬件环境包括数
-据湖底层依赖的Hadoop 集群所需的一个主节点和两个从节点。
-% \begin{table}[h]
-%     \centering
-%     \caption{硬件环境信息表}
-%     \label{tab:hardware_info}
-%     \begin{tabular}{|l|l|l|l|l|l|}
-%     \hline
-%     \textbf{机器类型} & \textbf{内存} & \textbf{CPU型号} & \textbf{服务器型号} & \textbf{操作系统} & \textbf{磁盘} \\ \hline
-%     Master 主节点   & 64G  & Intel(R) Xeon(R) CPU E5-2683 v3 & 华为 FusionServer 2288H V5 & CentOS7 & 2T \\ \hline
-%     slave1 从节点    & 16G  & Intel(R) Xeon(R) E5-2600 v4     & 华为 FusionServer 2288H V5 & CentOS7 & 1T \\ \hline
-%     Slave2 从节点    & 16G  & Intel(R) Xeon(R) E5-2600 v4     & 华为 FusionServer 2288H V5 & CentOS7 & 1T \\ \hline
-%     \end{tabular}
-%     \label{tab:systesthaen}
-% \end{table}    
-% 表\ref{tab:systestsoen}
-% 所示为气井智能管控系统的软件测试环境。
-% \begin{table}[h]
-%     \centering
-%     \caption{软件环境信息表}
-%     \label{tab:software_info}
-%     \begin{tabular}{|l|l|l|}
-%     \hline
-%     \textbf{模块名称} & \textbf{软件名称} & \textbf{版本号} \\ \hline
-%     操作系统 & CentOS & 7.6 \\ \hline
-%     数据库   & MySQL & 7.0 \\ \hline
-%     数据缓存   & Redis & 4.0 \\ \hline
-%     Hadoop 集群 & Hadoop & 2.7.3 \\ \hline
-%     Java 开发   & JDK & 1.8 \\ \hline
-%     算法        & Python & 3.9 
-%     客户端访问   & Chrome 浏览器 & 88.0.4324.150 \\ \hline
-%     \end{tabular}
-%     \label{tab:systestsoen}
-% \end{table}
+气井智能管控系统的测试环境分为硬件环境和软件环境，表\ref{tab:systesthaen}所示为气井智能管控系统的硬件测试环境。其中硬件环境包括数据库服务器、业务服务器和Hudi集群。
 
+数据库服务器包括存储业务数据的MySQL及业务数据的缓存ClickHouse。业务服务器主要包括钱后端以及Python的部署，可以用来执行操作逻辑处理业务需求。Hudi集群采用三节点配置，包括一个主节点和两个从节点，此分布式设置增强了数据持久化存储的稳定性与安全性。
+\begin{table}
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{硬件测试环境信息}
+    \label{tab:systesthaen}
+    \begin{tabular}{|l|c|c|c|c|} % CPU列水平和垂直居中
+        \hline
+        \textbf{服务器类型} & \textbf{CPU}& \textbf{内存} & \textbf{磁盘} & \textbf{操作系统} \\ 
+        \hline
+        数据库服务器    & Intel(R) Xeon(R) CPU E5-2683 v3 & 16G       & 500G      & Centos7    \\ 
+        \hline
+        \multirow{3}{*}{Hudi集群} & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 2TB       & Centos7   \\ 
+        \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\
+        \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\ 
+        \hline
+        业务服务器      & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 500G      & Centos7   \\ 
+        \hline
+    \end{tabular}
+\end{table}
+表\ref{tab:systestsoen}
+所示为气井智能管控系统的软件测试环境。
+\begin{table}
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \caption{软件测试环境信息}
+    \label{tab:systestsoen}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        模块名称 & 软件名称 & 版本号 \\ 
+        \hline
+        Java开发 & JDK &1.5 \\
+        \hline
+        算法开发 & Python & 3.9 \\
+        \hline 
+        \multirow{4}{*}{数据存储} & MySQL & 5.6 \\
+        \cline{2-3} & Redis &4.0 \\
+        \cline{2-3} & ClickHouse & 21.10 \\
+        \cline{2-3} & Hudi & 0.11.0 \\
+        \hline
+    \end{tabular}
+\end{table}
 \subsection{系统功能性测试}
 本小节从系统功能性需求出发，为每个模块设计测试用例和场景并记录结果。
 
@@ -220,11 +227,12 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 
 数据连接管理模块主要包括新建数据连接、删除数据连接、编辑数据连接和测试
 连接四个功能，其测试用例如表\ref{tab:testcon}所示。
-\begin{table}[H]
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{数据连接测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \label{tab:testcon}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 &  测试步骤 & 预期结果 \\
         \hline
@@ -236,32 +244,33 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         4 & 测试数据连接 & 选择一个数据连接，选择测试按钮 & 测试这个数据连接当前是否是成功的 \\
         \hline
-    \end{tabularx}
-    \label{tab:testcon}
+    \end{tabular}
 \end{table}
+
 根据表\ref{tab:testcon}的测试内容，可以在数据连接页面进行创建、删除、编辑和测试连接等操作。图\ref{fig:login}为系统的登陆界面。图\ref{fig:dataconre}为数据连接的界面。
-\begin{figure}[H]
+
+\begin{figure}
     \centering
+    \includegraphics{figure/login.pdf}
     \caption{气井智能管控系统登陆界面}
-    \includegraphics[width=.8\linewidth]{figure/login.pdf}
     \label{fig:login}
 \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \caption{数据连接界面}
-%     \includegraphics[width=.8\linewidth]{figure/数据连接.pdf}
-%     \label{fig:dataconre}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{figure/数据连接.pdf}
+    \caption{数据连接界面}
+    \label{fig:dataconre}
+\end{figure}
 
 （2） 数据管理
 
 由前文可知数据管理分为目录管理、数据集管理和数据集更新。其中目录管理测试用例如表\ref{tab:direte}所示。
-\begin{table}[H]
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{目录管理测试用例}
     \label{tab:direte}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
         \hline
@@ -271,22 +280,27 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         7 & 删除目录 & 选择一个目录并将其删除 & 目录及其下面的数据集等都被删除 \\
         \hline
-    \end{tabularx}
+    \end{tabular}
 \end{table}
+
 目录管理的实现如图\ref{fig:dirre}所示。
-\begin{figure}[H]
+
+\begin{figure}
     \renewcommand{\arraystretch}{1.5}
     \centering
+    \includegraphics{figure/目录管理.pdf}
     \caption{目录管理界面}
-    \includegraphics[scale=0.22,angle=0]{figure/目录管理.pdf}
     \label{fig:dirre}
 \end{figure}
+
 数据集管理分为新建数据集、浏览数据集和复制数据集，其测试用例如表\ref{tab:dasette}所示。
-\begin{table}[H]
+
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{数据集管理测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \label{tab:dasette}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 & 测试步骤 &预期结果 \\
         \hline
@@ -296,22 +310,26 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         10 & 复制数据集 & 选择数据集，将数据集复制到新的目录下面 & 数据集复制成功 \\
         \hline
-    \end{tabularx}
-    \label{tab:dasette}
+    \end{tabular}
 \end{table}
+
 数据集管理的实现结果如图\ref{fig:dasetre}所示。
-\begin{figure}[H]
+
+\begin{figure}
     \centering
+    \includegraphics{figure/数据集管理.pdf}
     \caption{数据集管理界面}
-    \includegraphics[scale=0.22,angle=0]{figure/数据集管理.pdf}
     \label{fig:dasetre}
 \end{figure}
+
 数据集更新分为新建、修改、删除定时/周期任务，其测试用例如表\ref{tab:updatete}所示。
-\begin{table}[H]
+
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{数据集更新测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \label{tab:updatete}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 &测试步骤 & 预期结果 \\
         \hline
@@ -321,25 +339,28 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         13 & 删除定时/周期任务 & 选择某一任务，点击删除任务按钮将其删除 & 删除成功 \\
         \hline
-    \end{tabularx}
-    \label{tab:updatete}
+    \end{tabular}
 \end{table}
+
 数据集更新的实现如图\ref{fig:updatere}所示。
-\begin{figure}[H]
+
+\begin{figure}
     \centering
+    \includegraphics{figure/数据集操作.pdf}
     \caption{数据集更新界面}
-    \includegraphics[scale=0.3,angle=0]{figure/数据集操作.pdf}
     \label{fig:updatere}
 \end{figure}
 
 （3）智能分析
 
 智能分析包括气井分类、产气量预测和开关井推荐，其中气井分类测试用例如表\ref{tab:clusterte}所示。
-\begin{table}[H]
+
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{气井分类测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \label{tab:clusterte}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
         \hline
@@ -347,22 +368,25 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         15 & 获取单个气井分类结果 & 选择气井号，提交以后获得分类结果 & 获取结果成功 \\
         \hline
-    \end{tabularx}
-    \label{tab:clusterte}
+    \end{tabular}
 \end{table}
+
 气井分类的界面如图\ref{fig:clusterre}所示。
-\begin{figure}[H]
+
+\begin{figure}
     \centering
+    \includegraphics{figure/气井分类.jpg}
     \caption{气井分类界面}
-    \includegraphics[scale= 0.22,angle=0]{figure/气井分类.jpg}
     \label{fig:clusterre}
 \end{figure}
+
 产气量预测的测试用例如表\ref{tab:predite}所示。
-\begin{table}[H]
+
+\begin{table}
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{产气量预测测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
         \hline
@@ -370,47 +394,53 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         17 & 模型效果检验 & 选择气井号以及预测步长，得到其真实值与预测值曲线之间的差异 & 检验成功 \\
         \hline
-    \end{tabularx}
+    \end{tabular}
     \label{tab:predite}
 \end{table}
+
 产气量预测的界面如\ref{fig:prere}所示。
-\begin{figure}[H]
+
+\begin{figure}
     \centering
-    \subfloat[预测产气量]{\includegraphics[width=.22\linewidth]{figure/产气量预测_预测.pdf}%
+    \subfloat[预测产气量]{\includegraphics{figure/产气量预测_预测.pdf}%
     \label{pre}}
     \hfil
-    \subfloat[模型效果]{\includegraphics[width=.22\linewidth]{figure/产气量预测_模型效果检验.pdf}%
+    \subfloat[模型效果]{\includegraphics{figure/产气量预测_模型效果检验.pdf}%
     \label{model}}
     \caption{产气量预测界面}
     \label{fig:prere}
 \end{figure}
+
 开关井推荐的测试用例如表\ref{tab:opente}所示。
+
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{开关井推荐测试用例}
-    \begin{tabularx}{\textwidth}{|l|c|Y|Y|}
+    \label{tab:opente}
+    \begin{tabular}{|l|c|c|c|}
         \hline
         编号 & 用例说明 &测试步骤 &结果预期 \\
         \hline
         18 & 开关井推荐 & 用户输入目标产量及压力阈值，并根据选定的不能开的等条件作出开关井推荐 & 获得开关井推果，并具体展示集气站产量以及每天需要开关的井等 \\
         \hline
-    \end{tabularx}
-    \label{tab:opente}
+    \end{tabular}
 \end{table}
+
 开关井推荐的界面如图\ref{fig:openre}所示。
+
 \begin{figure}[H]
     \centering
-    \caption{开关井推荐界面}
-    \label{fig:openre}
-    \subfloat[可视化展示]{\includegraphics[width=.22\linewidth]{figure/开关井预测-图片.pdf}%
+    \subfloat[可视化展示]{\includegraphics{figure/开关井预测-图片.pdf}%
     \label{open}}
     \hfil
-    \subfloat[分别到集气站的产量]{\includegraphics[width=.22\linewidth]{figure/开关井推荐-各集气站产量.pdf}%
+    \subfloat[分别到集气站的产量]{\includegraphics{figure/开关井推荐-各集气站产量.pdf}%
     \label{station}}
     \hfil
-    \subfloat[每日需开关的井]{\includegraphics[width=.22\linewidth]{figure/开关井推荐-每日变化展示.pdf}%
+    \subfloat[每日需开关的井]{\includegraphics{figure/开关井推荐-每日变化展示.pdf}%
     \label{dailyopen}}
+    \caption{开关井推荐界面}
+    \label{fig:openre}
 \end{figure}
 \subsection{系统非功能性测试}
 功能性测试关注于验证实现的功能是否满足用户需求。与之相对地，本节将进行系统的非功能性测试，旨在评估系统的可靠性和安全性。本节主要对系统中的部分功能模块进行响应时间的测试。根据系统的功能模块划分，通过进行多轮测试实验并计算其平均值，确保了测试结果的准确性与
@@ -420,7 +450,8 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{系统响应时间测试}
-    \begin{tabularx}{\textwidth}{|c|Y|c|c|c|}
+    \label{tab:timte}
+    \begin{tabular}{|c|c|c|c|c|}
         \hline
        操作内容& 操作类型 & 响应结果1 & 响应结果2 & 响应结果3 \\
        \hline
@@ -436,11 +467,11 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
         \hline
         气井分类 & 用户获得所有气井和单个气井分类的结果 & 151ms & 147ms & 138ms\\ 
         \hline 
-        产气量预测 & 用户进行产气量预测和模型检验 & 7.2s & 9.8s & 8.3s \\
+        产气量预测 & 用户进行产气量预测和模型检验 & 7.2s & 9.5s & 8.3s \\
         \hline
         开关井推荐 & 系统根据用户的目标产量及压力阈值生成开关井策略 & 0.93min & 1.24s & 1.09s \\
         \hline
-    \end{tabularx}
+    \end{tabular}
 \end{table}
 由表可知，一些基础操作的响应时间都在400ms以内，产气量预测和开关井算法由于算法的复杂性会需要一定的时间，但依然在用户可接受范围内。
 \subsection{本章小节}
