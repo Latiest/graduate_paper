@@ -306,3 +306,150 @@ issn = {1672-7703},
   year={2021},
   publisher={Elsevier}
 }
+
+@article{arps1945analysis,
+  title={Analysis of decline curves: Transactions of the AIME},
+  author={Arps, JJ},
+  year={1945}
+}
+
+@book{rawlins1935back,
+  title={Back-pressure data on natural-gas wells and their application to production practices},
+  author={Rawlins, Edwin Lee and Schellhardt, Morris A},
+  volume={7},
+  year={1935},
+  publisher={Lord Baltimore Press}
+}
+
+@article{WANG2024123387,
+
+title = {A novel governing equation for shale gas production prediction via physics-informed neural networks},
+journal = {Expert Systems with Applications},
+volume = {248},
+pages = {123387},
+year = {2024},
+issn = {0957-4174},
+doi = {https://doi.org/10.1016/j.eswa.2024.123387},
+url = {https://www.sciencedirect.com/science/article/pii/S0957417424002525},
+author = {Hai Wang and Muming Wang and Shengnan Chen and Gang Hui and Yu Pang},
+keywords = {Automatic differentiation, Fractional derivative, Physics-informed machine learning, Decline curve analysis, Shale gas reservoir},
+abstract = {Shale gas has become increasingly important due to the high demand for energy worldwide. Therefore, accurate and fast production forecasting is of paramount importance, and decline curve analysis is a powerful tool due to its efficiency and simplicity. However, the famous Arps model often fails to accurately depict the decline curve for shale gas wells especially for the long-term prediction, because the assumed boundary-dominated flow regime can rarely be achieved. Although various improved models have been developed, they all also suffer from various limitations and are not always expected to be competent in practice. In this work, physics-informed neural network (PINN) is proposed to identify the decline curve of shale gas wells by integrating Caputo fractional derivative, automatic differentiation and sparse regression. Specifically, PINN is trained on the production data from 20 wells in the Duvernay Formation, and the results demonstrate that the decline curve can be accurately depicted by a nonhomogeneous fractional order differential equation. PINN can draw more physically sound predictions by the introduction of physical information, whereas the extrapolation of normal NN deviates significantly with time. In addition, the proposed procedure can provide valuable insights into the underlying decision-making mechanisms of neural networks, resulting in better interpretability and portability.}
+}
+
+@article{KTDQ202305012,  
+    author = {韩克宁 and 王伟 and 樊冬艳 and 姚军 and 罗飞 and 杨灿},  
+    title = {基于产量递减与LSTM耦合的常压页岩气井产量预测},  
+    journal = {油气藏评价与开发},  
+    volume = {13},  
+    number = {05},  
+    pages = {647-656},  
+    year = {2023},  
+    issn = {2095-1426},  
+    doi ={10.13809/j.cnki.cn32-1825/te.2023.05.012}  
+}
+
+@article{10.2118/209616-PA,
+    author = {Tadjer, Amine and Hong, Aojie and Bratvold, Reidar},
+    title = "{Bayesian Deep Decline Curve Analysis: A New Approach for Well Oil Production Modeling and Forecasting}",
+    journal = {SPE Reservoir Evaluation  Engineering},
+    volume = {25},
+    number = {03},
+    pages = {568-582},
+    year = {2022},
+    month = {08},
+    abstract = "{Following the rapid growth of unconventional resources, many models and methods have been proposed for forecasting the performances of unconventional wells. Several studies have attempted to use machine learning (ML) for improving the forecasting. However, owing to limitations of ML in regard to long-term forecasts (e.g., the occurrence of unphysical results), most of these ML forecasts are not satisfactory. In this work, we propose, demonstrate, and discuss a new ML approach able to rapidly provide probabilistic, long-term forecasts of oil production rates from individual wells in a decline curve analysis (DCA) manner. The novelties of the proposed approach are as follows: (1) it combines an automated ML (AutoML) method for supervised learning and a Bayesian neural ordinary differential equation (BN-ODE) framework for time-series modeling; (2) it uses the DCA model to inform the BN-ODE framework of “physics” and regulate the BN-ODE forecasts; and (3) several completion parameters (such as locations, lengths, and slickwater volume) of individual wells are analyzed and included as the inputs of model building, in addition to measured oil production rate data. Specifically, AutoML method is first used to model the relationship between the well location, completion parameters, and the DCAs parameters, and the BN-ODE framework is then used to model the relationship between the DCAs parameters and the time-series oil production rates. A publicly accessible data set, consisting of completion parameters and oil production rates, of 396 horizontal wells in the Bakken Shale Formation is used to train and test the model of the proposed approach. The results lead to the conclusion that the proposed approach is practical for providing probabilistic, long-term forecasts of oil production from individual wells, given data of existing wells in the reservoir.}",
+    issn = {1094-6470},
+    doi = {10.2118/209616-PA},
+    url = {https://doi.org/10.2118/209616-PA},
+    eprint = {https://onepetro.org/REE/article-pdf/25/03/568/2887573/spe-209616-pa.pdf},
+}
+
+@article{CJDL202004006,  
+    author = {李菊花 and 陈晨 and 肖佳林},  
+    title = {基于随机森林算法的页岩气多段压裂井产量预测},  
+    journal = {长江大学学报(自然科学版)},  
+    volume = {17},  
+    number = {04},  
+    pages = {34-38+7},  
+    year = {2020},  
+    issn = {1673-1409},  
+    doi ={10.16772/j.cnki.1673-1409.2020.04.006}  
+}
+
+@article{NIU2023127443,
+title = {An ensemble transfer learning strategy for production prediction of shale gas wells},
+journal = {Energy},
+volume = {275},
+pages = {127443},
+year = {2023},
+issn = {0360-5442},
+doi = {https://doi.org/10.1016/j.energy.2023.127443},
+url = {https://www.sciencedirect.com/science/article/pii/S036054422300837X},
+author = {Wente Niu and Yuping Sun and Xiaowei Zhang and Jialiang Lu and Hualin Liu and Qiaojing Li and Ying Mu},
+keywords = {Shale gas, Production prediction, Ensemble algorithm, Neural network, Transfer learning, Across formations, Blocks},
+abstract = {In order to overcome the training data insufficient problem of model for shale gas wells production prediction in new block, this study proposes a transfer learning strategy of improving neural network as the base learner based on the idea of ensemble learning, which is used for shale gas production prediction across formations/blocks. The proposed transfer learning model aims to improve the gas well production prediction performance of new blocks with limited gas well data. The base learner based on improved neural network tries to find the domain invariant feature extraction between source and target blocks through domain adaptation. Bagging algorithm, a parallel ensemble learning method, is used to combine multiple base models to improve the predictive performance of ensemble models. Then, the prediction model trained by the combined data of source and target domain can be directly applied to predict the production of shale gas wells in target domain. The validity of the model was verified on four shale gas well data sets. Results demonstrate that regardless of the degree of domain migration, the transfer learning model proposed in this study can extract domain invariant features by ensemble learning method, overcome the problem of domain migration between source domain and target domain data sets, and significantly improve the production prediction performance of shale gas wells. This work can effectively provide guidance for the production prediction of shale gas wells in new production blocks.}
+}
+
+@article{HE20231659,
+title = {Shale gas production evaluation framework based on data-driven models},
+journal = {Petroleum Science},
+volume = {20},
+number = {3},
+pages = {1659-1675},
+year = {2023},
+issn = {1995-8226},
+doi = {https://doi.org/10.1016/j.petsci.2022.12.003},
+url = {https://www.sciencedirect.com/science/article/pii/S1995822622003284},
+author = {You-Wei He and Zhi-Yue He and Yong Tang and Ying-Jie Xu and Ji-Chang Long and Kamy Sepehrnoori},
+keywords = {Shale gas, Production evaluation, Production prediction, Data-driven models, Carbon neutrality},
+abstract = {Increasing the production and utilization of shale gas is of great significance for building a clean and low-carbon energy system. Sharp decline of gas production has been widely observed in shale gas reservoirs. How to forecast shale gas production is still challenging due to complex fracture networks, dynamic fracture properties, frac hits, complicated multiphase flow, and multi-scale flow as well as data quality and uncertainty. This work develops an integrated framework for evaluating shale gas well production based on data-driven models. Firstly, a comprehensive dominated-factor system has been established, including geological, drilling, fracturing, and production factors. Data processing and visualization are required to ensure data quality and determine final data set. A shale gas production evaluation model is developed to evaluate shale gas production levels. Finally, the random forest algorithm is used to forecast shale gas production. The prediction accuracy of shale gas production level is higher than 95% based on the shale gas reservoirs in China. Forty-one wells are randomly selected to predict cumulative gas production using the optimal regression model. The proposed shale gas production evaluation framework overcomes too many assumptions of analytical or semi-analytical models and avoids huge computation cost and poor generalization for numerical modelling.}
+}
+
+@article{XUE2021107801,
+title = {A data-driven shale gas production forecasting method based on the multi-objective random forest regression},
+journal = {Journal of Petroleum Science and Engineering},
+volume = {196},
+pages = {107801},
+year = {2021},
+issn = {0920-4105},
+doi = {https://doi.org/10.1016/j.petrol.2020.107801},
+url = {https://www.sciencedirect.com/science/article/pii/S0920410520308627},
+author = {Liang Xue and Yuetian Liu and Yifei Xiong and Yanli Liu and Xuehui Cui and Gang Lei},
+keywords = {Shale gas, Production forecasting, Machine learning, Random forest},
+abstract = {Shale gas is an important unconventional natural gas resource existing in shale reservoir with huge reserves. Due to the ultralow porosity and permeability, it requires the horizontal well drilling and the multi-stage hydraulic fracturing technology to successfully produce the shale gas. The accurate prediction of shale gas production is crucial to the reasonable design of the development plan. However, due to the complex hydraulic fracture network and the gas flow mechanism, the physics-based shale gas production prediction model is still under way. The data-driven model provide an alternative way to deal with the production prediction problem. The multi-objective random forest method is proposed to predict the dynamic production data. The geological and hydraulic fracturing properties are used as input feature. Its prediction performance is evaluated based on the R squared values after determining the appropriate hyper-parameters. The ranking of variable importance can be helpful to improve the interpretability of the data-driven model. The initial peak production rate before declining can be also used as an additional input feature. With the initial peak production rate augmented into the feature set, it can greatly improve the prediction of shale gas production. The variable importance analysis results show that it can be the most influencing factor to prediction accuracy and the ranking of other factors can be altered significantly. The performance of multi-objective random forest (MORF) and multi-output regression chain (MORC) methods are compared, and the comparison result indicates MORC requires a relatively smaller random forest structure, but the prediction performance of MORF is better than MORC. More sample data with less measurement errors can increase the accuracy of the data-driven shale gas production model but there exists a threshold value to improve the accuracy gain.}
+}
+
+@article{LIU2023125536,
+title = {Novel production prediction model of gasoline production processes for energy saving and economic increasing based on AM-GRU integrating the UMAP algorithm},
+journal = {Energy},
+volume = {262},
+pages = {125536},
+year = {2023},
+issn = {0360-5442},
+doi = {https://doi.org/10.1016/j.energy.2022.125536},
+url = {https://www.sciencedirect.com/science/article/pii/S0360544222024185},
+author = {Jintao Liu and Liangchao Chen and Wei Xu and Mingfei Feng and Yongming Han and Tao Xia and Zhiqiang Geng},
+keywords = {Gated recurrent unit neural network, Attention mechanism, Uniform manifold approximation and projection, Dimensionality reduction, Output prediction optimization, Gasoline production process},
+abstract = {Gasoline, as an extremely important petroleum product, is of great significance to ensure people's living standards and maintain national energy security. In the actual gasoline industrial production environment, the point information collected by industrial devices usually has the characteristics of high dimension, high noise and time series because of the instability of manual operation and equipment operation. Therefore, it is difficult to use the traditional method to predict and optimize gasoline production. In this paper, a novel production prediction model using an attention mechanism (AM) based gated recurrent unit (GRU) (AM-GRU) integrating the uniform manifold approximation and projection (UMAP) is proposed. The data collected in the industrial plant are processed by the box plot to remove the data outside the quartile. Then, the UMAP is used to remove the strong correlation between the data, which can improve the running speed and the performance of the AM-GRU. Compared with the existing time series data prediction method, the superiority of the AM-GRU is verified based on University of California Irvine (UCI) benchmark datasets. Finally, the production prediction model of actual complex gasoline production processes for energy saving and economic increasing based on the proposed method is built. The experiment results show that compared with other time series data prediction models, the proposed model has better stability and higher accuracy with reaching 0.4171, 0.9969, 0.2538 and 0.5038 in terms of the mean squared error, the average absolute accuracy, the mean squared error and the root mean square error. Moreover, according to the optimal scheme of the raw material, the inefficiency production points can be expected to increase about 0.69 tons of the gasoline yield and between about $645.1 and $925.6 of economic benefits of industrial production.}
+}
+
+@article{KXJS202302015,  
+    author = {李媛 and 郭大立 and 康芸玮},  
+    title = {融合注意力机制的煤层气产量动态预测},  
+    journal = {科学技术与工程},  
+    volume = {23},  
+    number = {02},  
+    pages = {550-557},  
+    year = {2023},  
+    issn = {1671-1815},  
+    doi ={}  
+}
+
+@misc{wen2018multihorizon,
+      title={A Multi-Horizon Quantile Recurrent Forecaster}, 
+      author={Ruofeng Wen and Kari Torkkola and Balakrishnan Narayanaswamy and Dhruv Madeka},
+      year={2018},
+      eprint={1711.11053},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
+}

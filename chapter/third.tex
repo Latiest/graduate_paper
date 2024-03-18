@@ -205,44 +205,42 @@ Monetary (M)：平均开井产量。在传统RFM模型中代表消费金额，�
 
 通过对开井近度和平均开井产量设定分类阈值，结合开井频度的分布特点，我们可以将气井分为四类，这样的分类有助于更精细地管理和调整生产策略，以提高整体生产效率和资源的有效利用。
 具体如表\ref{table:KDE}所示。
+
+通过以上步骤，将气井数据分为4类，每类气井具有不同的生产价值类型和KPI战术意义。对分类结果进行分析和评估，可以为气井的运营管理提供有针对性的建议。
+例如，活跃高价值气井（近高）可以适当提高开井频度以充分发挥其生产潜力。活跃一般价值气井（近低）可通过实施工艺措施来提高开井产量等。
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
     \caption{气井分类模型及类型定义}
-    \begin{tabular}{|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|}
     \hline
-    开井近度 R & 开井频次 F & 开井产量 M & 分类标准       & 生产价值类别   \\ \hline
-    近       & 高       & 高       & 近高高       & 非常有价值 \\ \hline
-    远       & 高       & 高       & 远高高       & 不活跃有价值 \\ \hline
-    近       & 低       & 高       & 近低高       & 高潜力有价值 \\ \hline
-    远       & 低       & 高       & 远低高       & 可挖掘有价值 \\ \hline
-    近       & 高       & 低       & 近高低       & 活跃一般价值 \\ \hline
-    远       & 高       & 低       & 远高低       & 不活跃一般价值 \\ \hline
-    近       & 低       & 低       & 近低低       & 活跃一般潜力 \\ \hline
-    远       & 低       & 低       & 远低低       & 不活跃一般潜力 \\ \hline
+    开井近度 R  & 开井产量 M & 分类标准       & 生产价值类别   \\ \hline
+    近         & 高        & 近高          & 活跃高价值 \\ \hline
+    远         & 高        & 远高          & 不活跃高价值 \\ \hline
+    近         & 低        & 近低          & 活跃一般价值 \\ \hline
+    远         & 低        & 远低          & 不活跃一般价值 \\ \hline
     \end{tabular}
     \label{table:KDE}
 \end{table}
-通过以上步骤，将气井数据分为4类，每类气井具有不同的生产价值类型和KPI战术意义。对分类结果进行分析和评估，可以为气井的运营管理提供有针对性的建议。
-例如，活跃高价值气井（近高高）应提高开井时率以充分发挥其生产潜力；活跃一般价值气井（近高低）可通过实施工艺措施来提高产量；活跃一般潜力气井（近低低）则需关注提升措施的有效性，以提高气井的价值。  
-\section{分类结果}
-最终对1000余口气井进行分类的结果如表\ref{fig:classtable}所示。
-\begin{table}[h]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
-    \caption{每类气井类别数}
-    \label{fig:classtable}
-    \begin{tabular}{|c|c|}
-    \hline
-    分类 & 数量 \\ \hline
-    不活跃一般潜力    & 306 \\ \hline
-    活跃一般价值    & 228 \\ \hline
-    活跃一般潜力    & 149 \\ \hline
-    不活跃一般价值    & 122 \\ \hline
-    活跃高价值    & 99  \\ \hline
-    高潜力高价值    & 73  \\ \hline
-    可挖掘高价值  & 66  \\ \hline
-    不活跃高价值  & 31  \\ \hline
-    \end{tabular}
-\end{table}
+
+% \section{分类结果}
+% 最终对1000余口气井进行分类的结果如表\ref{fig:classtable}所示。
+% \begin{table}[h]
+%     \renewcommand{\arraystretch}{1.5}
+%     \centering
+%     \caption{每类气井类别数}
+%     \label{fig:classtable}
+%     \begin{tabular}{|c|c|}
+%     \hline
+%     分类 & 数量 \\ \hline
+%     不活跃一般潜力    & 306 \\ \hline
+%     活跃一般价值    & 228 \\ \hline
+%     活跃一般潜力    & 149 \\ \hline
+%     不活跃一般价值    & 122 \\ \hline
+%     活跃高价值    & 99  \\ \hline
+%     高潜力高价值    & 73  \\ \hline
+%     可挖掘高价值  & 66  \\ \hline
+%     不活跃高价值  & 31  \\ \hline
+%     \end{tabular}
+% \end{table}
     
