@@ -142,7 +142,7 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 数据库中数据连接实例信息表交互的接口。
 \subsection{数据管理模块}
 数据管理模块主要包括三个部分：目录管理、数据集管理和数据集更新。在目录管理中，主要任务是整理数据集的存储位置，确保它们正确归档在特定文件夹内。目录由不同的节点组成，包括文件夹和数据集本身，它们在目录中以不同的方式标记以便区分。保持这些节点之间的层次结构有助于形成一个有层次的目录结构。
-在数据集管理方面，我们可以创建、删除、复制和查看数据集，以便有效地管理它们。
+在数据集管理方面，可以创建、删除、复制和查看数据集，以便有效地管理它们。
 
 对于数据集更新，它允许数据集按计划或周期性地更新。更新可以是自动的，也可以是手动的。每个数据集都有一个关于如何更新的设置，如果用户未做设置，则使用默认配置。根据这些设置，平台会定期或按需更新数据集，并记录更新任务的详细信息和状态。
 更新时，系统确保每个数据集同时只能有一个更新任务在进行。这是通过检查一个特殊的Map实现的，该Map确保每个数据集同时只有一个关联的更新任务正在运行。更新任务的执行是多线程的，使用了一个特定的线程池，该线程池可以调度周期性任务。对于一次性的手动更新，任务会直接提交给线程池执行。
@@ -151,7 +151,7 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 当前端发出请求时，DataManagementController将充当主要接口来处理并分析这些请求。目录和数据集的管理任务都通过DataSourceService接口完成，而数据集的具体动作则是由DatasetUpdateServiceImpl接口负责。在这种设置下，文件夹和数据集被看作是目录结构的元素，它们虽然共处一个层级，但通过不同的方式标记以区分。
 在实现方面，DirectoryServiceImpl和DatasetImpl分别实现了DataSourceService接口的具体职责，处理不同的数据管理需求。当用户进入数据管理页面时，系统首先会调用getTotalCatalog()方法来获得全部资源目录结构。通过makeRootDir()方法可以创建在根目录创建新的文件夹，此外，还可以对文件夹进行移动、删除、重命名等操作。
 通过文件夹进入到具体的数据集后，DatasetImpl的previewData()方法会将得到数据集的具体内容，前端通过与controller通信读取内容后经过处理，可以将预览数据集的结果显示在用户界面上。该处还支持用户通过establishDIYDataset()等方法上传自己的数据集、Excel文件、删除数据集等。
-在数据模型方面，我们区分了两种类型的信息实体：DirectoryInfo 代表目录节点，而 DatasetInfo 代表数据集节点。DatasetUpdateServiceImpl是对DatasetUpdateService接口的实现，当进入数据集的更新设置页面后，会先调用getDatasetUpdateInfo()方法来查看
+在数据模型方面，本文区分了两种类型的信息实体：DirectoryInfo 代表目录节点，而 DatasetInfo 代表数据集节点。DatasetUpdateServiceImpl是对DatasetUpdateService接口的实现，当进入数据集的更新设置页面后，会先调用getDatasetUpdateInfo()方法来查看
 数据集已有的更新设置。随后可以通过setDatasetUpdateInfo()或setAllDatasetUpdateInfo()来修改一个或多个数据集的更新设置。修改完更新设置后，可以通过startDatasetUpdateTask()方法来启动一个更新任务，目前系统近支持
 全量更新。随后可以关闭更新任务。同时getAllDatasetUpdateInfo()方法也可以查看用户的所有数据集更新信息。
 \begin{figure}[H]
@@ -180,45 +180,52 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 
 数据库服务器包括存储业务数据的MySQL及业务数据的缓存ClickHouse。业务服务器主要包括钱后端以及Python的部署，可以用来执行操作逻辑处理业务需求。Hudi集群采用三节点配置，包括一个主节点和两个从节点，此分布式设置增强了数据持久化存储的稳定性与安全性。
 \begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
     \caption{硬件测试环境信息}
     \label{tab:systesthaen}
-    \begin{tabular}{|l|c|c|c|c|} % CPU列水平和垂直居中
-        \hline
-        \textbf{服务器类型} & \textbf{CPU}& \textbf{内存} & \textbf{磁盘} & \textbf{操作系统} \\ 
-        \hline
+    \begin{tblr}{hlines,vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        cell{3}{1} = {r=3}{c}
+        }
+        服务器类型 & CPU& 内存 & 磁盘 & 操作系统 \\ 
         数据库服务器    & Intel(R) Xeon(R) CPU E5-2683 v3 & 16G       & 500G      & Centos7    \\ 
-        \hline
-        \multirow{3}{*}{Hudi集群} & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 2TB       & Centos7   \\ 
-        \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\
-        \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\ 
-        \hline
+        Hudi集群 & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 2TB       & Centos7   \\ 
+        & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\
+        & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\ 
         业务服务器      & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 500G      & Centos7   \\ 
-        \hline
-    \end{tabular}
+    \end{tblr}
+    % \begin{tabular}{|l|c|c|c|c|} % CPU列水平和垂直居中
+    %     \hline
+    %     \textbf{服务器类型} & \textbf{CPU}& \textbf{内存} & \textbf{磁盘} & \textbf{操作系统} \\ 
+    %     \hline
+    %     数据库服务器    & Intel(R) Xeon(R) CPU E5-2683 v3 & 16G       & 500G      & Centos7    \\ 
+    %     \hline
+    %     \multirow{3}{*}{Hudi集群} & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 2TB       & Centos7   \\ 
+    %     \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\
+    %     \cline{2-5} & Intel(R) Xeon(R) CPU E5-2683 v3 & 4G        & 1TB       & Centos7  \\ 
+    %     \hline
+    %     业务服务器      & Intel(R) Xeon(R) CPU E5-2683 v3 & 8G        & 500G      & Centos7   \\ 
+    %     \hline
+    % \end{tabular}
 \end{table}
 表\ref{tab:systestsoen}
 所示为气井智能管控系统的软件测试环境。
 \begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
     \caption{软件测试环境信息}
     \label{tab:systestsoen}
-    \begin{tabular}{|c|c|c|}
-        \hline
+    \begin{tblr}{width = \textwidth,
+        colspec = {|X[c]|X[c]|X[c]|X[c]|},
+        hlines, vlines,
+        columns = {valign=m},
+        cell{4}{1} = {r=4}{c} }
         模块名称 & 软件名称 & 版本号 \\ 
-        \hline
         Java开发 & JDK &1.5 \\
-        \hline
         算法开发 & Python & 3.9 \\
-        \hline 
-        \multirow{4}{*}{数据存储} & MySQL & 5.6 \\
-        \cline{2-3} & Redis &4.0 \\
-        \cline{2-3} & ClickHouse & 21.10 \\
-        \cline{2-3} & Hudi & 0.11.0 \\
-        \hline
-    \end{tabular}
+        数据存储 & MySQL & 5.6 \\
+        & Redis &4.0 \\
+         & ClickHouse & 21.10 \\
+         & Hudi & 0.11.0 \\
+    \end{tblr}
 \end{table}
 \subsection{系统功能性测试}
 本小节从系统功能性需求出发，为每个模块设计测试用例和场景并记录结果。
@@ -228,38 +235,34 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 数据连接管理模块主要包括新建数据连接、删除数据连接、编辑数据连接和测试
 连接四个功能，其测试用例如表\ref{tab:testcon}所示。
 \begin{table}[H]
-    \centering
     \caption{数据连接测试用例}
     \label{tab:testcon}
-    \begin{tblr}{
-        width = \linewidth, % 控制表格宽度为行宽
-        colspec = {|X[c]|X[c]|X[c]|X[c]|}, % 设置列格式让文本水平和垂直居中
-        row{1} = {font=\bfseries,}, % 第一行字体加粗，背景和字体颜色设置
-        hlines, % 每行之间画线
-        vlines, % 每列之间画线
-        cells = {c}, % 所有单元格内容垂直和水平居中
+    \begin{tblr}
+    {
+    hlines,vlines,
+    columns = {valign=m,co=-1},
+    rows    = {halign=c},
+    row{1}  = {font=\bfseries\boldmath},
     }
-        {编号} & {用例说明} & {测试步骤} & {预期结果} \\
-        {1} & {创建数据连接} & {选择新建数据连接，输入数据库配置参数，完成数据连接} & {新建数据连接成功} \\
-        {2} & {删除数据连接} & {选择一个数据连接，点击删除按钮} & {删除数据连接成功} \\
-        {3} & {编辑数据连接} & {选择一个数据连接，修改其参数配置并提交} & {编辑数据连接成功} \\
-        {4} & {测试数据连接} & {选择一个数据连接，选择测试按钮} & {测试这个数据连接当前是否是成功的} \\
+    编号 & 用例说明     & 测试步骤                                               & 预期结果                             \\
+    1    & 创建数据连接 & {选择新建数据连接，输入数据库\\配置参数，完成数据连接} & 新建数据连接成功                     \\
+    2    & 删除数据连接 & 选择一个数据连接，点击删除按钮                         & 删除数据连接成功                     \\
+    3    & 编辑数据连接 & 选择一个数据连接，修改其参数配置并提交                 & 编辑数据连接成功                     \\
+    4    & 测试数据连接 & 选择一个数据连接，选择测试按钮                         & {测试这个数据连接\\当前是否是成功的} \\
     \end{tblr}
 \end{table}
 
-
-
 根据表\ref{tab:testcon}的测试内容，可以在数据连接页面进行创建、删除、编辑和测试连接等操作。图\ref{fig:login}为系统的登陆界面。图\ref{fig:dataconre}为数据连接的界面。
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics{figure/login.pdf}
+    \includegraphics[width=.99\linewidth]{figure/login.pdf}
     \caption{气井智能管控系统登陆界面}
     \label{fig:login}
 \end{figure}
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics{figure/数据连接.pdf}
+    \includegraphics[width=.99\linewidth]{figure/数据连接.pdf}
     \caption{数据连接界面}
     \label{fig:dataconre}
 \end{figure}
@@ -267,88 +270,75 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 （2） 数据管理
 
 由前文可知数据管理分为目录管理、数据集管理和数据集更新。其中目录管理测试用例如表\ref{tab:direte}所示。
-\begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
+\begin{table}[H]
     \caption{目录管理测试用例}
     \label{tab:direte}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},
+        }
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
-        \hline
         5 & 新建目录 & 点击新建目录并命名 & 新建目录成功 \\
-        \hline 
         6 & 重命名目录 & 选择现有的一个目录并将其改成一个新名字 & 目录改名成功 \\
-        \hline
         7 & 删除目录 & 选择一个目录并将其删除 & 目录及其下面的数据集等都被删除 \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
-
 目录管理的实现如图\ref{fig:dirre}所示。
 
-\begin{figure}
+\begin{figure}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
-    \includegraphics{figure/目录管理.pdf}
+    \includegraphics[width=.99\linewidth]{figure/目录管理.pdf}
     \caption{目录管理界面}
     \label{fig:dirre}
 \end{figure}
 
 数据集管理分为新建数据集、浏览数据集和复制数据集，其测试用例如表\ref{tab:dasette}所示。
-
-\begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
+\begin{table}[H]
     \caption{数据集管理测试用例}
     \label{tab:dasette}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
         编号 & 用例说明 & 测试步骤 &预期结果 \\
-        \hline
         8 & 新建数据集 & 点击新建数据集按钮，选择要创建的数据集种类，并根据种类配置参数 & 创建数据集成功 \\
-        \hline
         9 & 浏览数据集 & 点进具体的数据集，浏览里面的数据 & 数据集里面的数据成功显示在前端 \\
-        \hline
         10 & 复制数据集 & 选择数据集，将数据集复制到新的目录下面 & 数据集复制成功 \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
 
 数据集管理的实现结果如图\ref{fig:dasetre}所示。
 
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics{figure/数据集管理.pdf}
+    \includegraphics[width=.99\linewidth]{figure/数据集管理.pdf}
     \caption{数据集管理界面}
     \label{fig:dasetre}
 \end{figure}
 
 数据集更新分为新建、修改、删除定时/周期任务，其测试用例如表\ref{tab:updatete}所示。
 
-\begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
+\begin{table}[H]
     \caption{数据集更新测试用例}
     \label{tab:updatete}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
         编号 & 用例说明 &测试步骤 & 预期结果 \\
-        \hline
         11 & 新建定时/周期任务 & 点击新建定时/周期任务并选取相应的参数创建任务 & 新建任务成功 \\
-        \hline
         12 & 修改定时/周期任务 & 选择某一任务，对其参数包括时间等修改 & 修改任务成功 \\
-        \hline
         13 & 删除定时/周期任务 & 选择某一任务，点击删除任务按钮将其删除 & 删除成功 \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
 
 数据集更新的实现如图\ref{fig:updatere}所示。
 
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics{figure/数据集操作.pdf}
+    \includegraphics[width=.99\linewidth]{figure/数据集操作.pdf}
     \caption{数据集更新界面}
     \label{fig:updatere}
 \end{figure}
@@ -357,57 +347,51 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 
 智能分析包括气井分类、产气量预测和开关井推荐，其中气井分类测试用例如表\ref{tab:clusterte}所示。
 
-\begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
+\begin{table}[H]
     \caption{气井分类测试用例}
     \label{tab:clusterte}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
         编号 & 用例说明 & 测试步骤 & 预期结果 \\
-        \hline
         14 & 获取所有气井分类结果 & 进入气井分类页面，获取所有气井分类结果，并可以在三维坐标上展示 & 获取结果成功 \\
-        \hline
         15 & 获取单个气井分类结果 & 选择气井号，提交以后获得分类结果 & 获取结果成功 \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
 
 气井分类的界面如图\ref{fig:clusterre}所示。
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics{figure/气井分类.jpg}
+    \includegraphics[width=.99\linewidth]{figure/气井分类.jpg}
     \caption{气井分类界面}
     \label{fig:clusterre}
 \end{figure}
 
 产气量预测的测试用例如表\ref{tab:predite}所示。
 
-\begin{table}
-    \renewcommand{\arraystretch}{1.5}
-    \centering
+\begin{table}[H]
     \caption{产气量预测测试用例}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
-        编号 & 用例说明 & 测试步骤 & 预期结果 \\
-        \hline
-        16 & 预测产气量 & 选取气井号，并选择想要预测的步长，得到最终预测结果 & 成功预测产气量 \\
-        \hline
-        17 & 模型效果检验 & 选择气井号以及预测步长，得到其真实值与预测值曲线之间的差异 & 检验成功 \\
-        \hline
-    \end{tabular}
     \label{tab:predite}
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
+        编号 & 用例说明 & 测试步骤 & 预期结果 \\
+        16 & 预测产气量 & 选取气井号，并选择想要预测的步长，得到最终预测结果 & 成功预测产气量 \\
+        17 & 模型效果检验 & 选择气井号以及预测步长，得到其真实值与预测值曲线之间的差异 & 检验成功 \\
+    \end{tblr}
 \end{table}
 
 产气量预测的界面如\ref{fig:prere}所示。
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \subfloat[预测产气量]{\includegraphics{figure/产气量预测_预测.pdf}%
+    \subfloat[预测产气量]{\includegraphics[width=.99\linewidth]{figure/产气量预测_预测.pdf}%
     \label{pre}}
     \hfil
-    \subfloat[模型效果]{\includegraphics{figure/产气量预测_模型效果检验.pdf}%
+    \subfloat[模型效果]{\includegraphics[width=.99\linewidth]{figure/产气量预测_模型效果检验.pdf}%
     \label{model}}
     \caption{产气量预测界面}
     \label{fig:prere}
@@ -416,65 +400,81 @@ establishInstance() 方法来创建一个新的数据连接实例，通过执行
 开关井推荐的测试用例如表\ref{tab:opente}所示。
 
 \begin{table}[H]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
     \caption{开关井推荐测试用例}
     \label{tab:opente}
-    \begin{tabular}{|l|c|c|c|}
-        \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
         编号 & 用例说明 &测试步骤 &结果预期 \\
-        \hline
         18 & 开关井推荐 & 用户输入目标产量及压力阈值，并根据选定的不能开的等条件作出开关井推荐 & 获得开关井推果，并具体展示集气站产量以及每天需要开关的井等 \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
 
 开关井推荐的界面如图\ref{fig:openre}所示。
 
+%     \subcaptionbox{b01\label{可视化展示}}{\includegraphics[width=.3\linewidth]{figure/开关井预测-图片.pdf}}\hfill
+%     \subcaptionbox{b02\label{分别到集气站的产量}}{\includegraphics[width=.3\linewidth]{figure/开关井推荐-各集气站产量.pdf}}\hfill
+% \end{figure}
+% \begin{figure}\ContinuedFloat
+%     \subcaptionbox{b03\label{每日需开关的井}}{\includegraphics[width=.3\linewidth]{figure/开关井推荐-每日变化展示.pdf}}\hfill
+%     \caption{开关井推荐界面}
+%     \label{fig:openre}
+% \end{figure}
+% \end{figure}
 \begin{figure}[H]
     \centering
-    \subfloat[可视化展示]{\includegraphics{figure/开关井预测-图片.pdf}%
-    \label{open}}
-    \hfil
-    \subfloat[分别到集气站的产量]{\includegraphics{figure/开关井推荐-各集气站产量.pdf}%
-    \label{station}}
-    \hfil
-    \subfloat[每日需开关的井]{\includegraphics{figure/开关井推荐-每日变化展示.pdf}%
-    \label{dailyopen}}
+    \includegraphics[width=.99\linewidth]{figure/开关井预测-图片.pdf}
+    \caption{可视化展示}
+    \label{fig:openre}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.99\linewidth]{figure/开关井推荐-各集气站产量.pdf}
+    \caption{分别到每个集气站的产量}
+    \label{fig:stationprog}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.99\linewidth]{figure/开关井推荐-每日变化展示.pdf}
     \caption{开关井推荐界面}
     \label{fig:openre}
 \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[可视化展示]{\includegraphics[width=.99\linewidth]{figure/开关井预测-图片.pdf}%
+%     \label{open}}
+%     \hfil
+%     \subfloat[分别到集气站的产量]{\includegraphics[width=.99\linewidth]{figure/开关井推荐-各集气站产量.pdf}%
+%     \label{station}}
+%     \hfil
+%     \subfloat[每日需开关的井]{\includegraphics[width=.99\linewidth]{figure/开关井推荐-每日变化展示.pdf}%
+%     \label{dailyopen}}
+%     \caption{开关井推荐界面}
+%     \label{fig:openre}
+% \end{figure}
 \subsection{系统非功能性测试}
-功能性测试关注于验证实现的功能是否满足用户需求。与之相对地，本节将进行系统的非功能性测试，旨在评估系统的可靠性和安全性。本节主要对系统中的部分功能模块进行响应时间的测试。根据系统的功能模块划分，通过进行多轮测试实验并计算其平均值，确保了测试结果的准确性与
-可靠性。
-系统主要功能的响应时间测试结果将展示在表\ref{tab:timte}中。
 \begin{table}[H]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
     \caption{系统响应时间测试}
     \label{tab:timte}
-    \begin{tabular}{|c|c|c|c|c|}
-        \hline
-       操作内容& 操作类型 & 响应结果1 & 响应结果2 & 响应结果3 \\
-       \hline
+    \begin{tblr}{hlines, vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        row{1}  = {font=\bfseries\boldmath},}
+        操作内容& 操作类型 & 响应结果1 & 响应结果2 & 响应结果3 \\
        登陆 & 用户输入账号密码登陆系统 & 144ms & 132ms & 129ms \\
-       \hline
        数据连接 & 用户进入数据连接界面，新建、删除、编辑、测试数据连接 & 288ms & 279ms &293ms \\
-       \hline
        目录管理 & 用户进入数据管理页面，对目录进行新建、重命名、删除操作 & 233ms & 249ms & 251ms \\
-       \hline
        数据集管理 & 用户进入数据集页面，对数据集进行新建、浏览、复制等操作 & 322ms & 334ms & 319ms \\
-       \hline
-       数据集更新 & 用户通过新建、修改、删除定时/周期任务来对数据集进行更新 & 266ms &279ms &253ms \\
-        \hline
         气井分类 & 用户获得所有气井和单个气井分类的结果 & 151ms & 147ms & 138ms\\ 
-        \hline 
         产气量预测 & 用户进行产气量预测和模型检验 & 7.2s & 9.5s & 8.3s \\
-        \hline
         开关井推荐 & 系统根据用户的目标产量及压力阈值生成开关井策略 & 0.93min & 1.24s & 1.09s \\
-        \hline
-    \end{tabular}
+    \end{tblr}
 \end{table}
+功能性测试关注于验证实现的功能是否满足用户需求。与之相对地，本节将进行系统的非功能性测试，旨在评估系统的可靠性和安全性。本节主要对系统中的部分功能模块进行响应时间的测试。根据系统的功能模块划分，通过进行多轮测试实验并计算其平均值，确保了测试结果的准确性与
+可靠性。
+
+系统主要功能的响应时间测试结果将展示在表\ref{tab:timte}中。
 由表可知，一些基础操作的响应时间都在400ms以内，产气量预测和开关井算法由于算法的复杂性会需要一定的时间，但依然在用户可接受范围内。
 \subsection{本章小节}
 本章节对系统需求进行了详细梳理，并结合先前讨论的算法以及油田企业对数据的具体需求，设计并实施了一套系统。本文对系统的功能性需求和非功能性需求均进行了全面测试，确保系统运行效果符合预期标准。
