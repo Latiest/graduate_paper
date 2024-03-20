@@ -143,7 +143,7 @@
 \captionsetup[subfloat]{subrefformat=parens}
 
 %% natbib & gbt7714
-\RequirePackage[sort&compress,square,super]{natbib}
+\RequirePackage[sort&compress,square,super,comma]{natbib}
 \RequirePackage{gbt7714}
 \@ifpackagelater{gbt7714}{2020/03/04}
   {\PassOptionsToPackage{numbers}{natbib}}

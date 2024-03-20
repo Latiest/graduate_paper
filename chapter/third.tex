@@ -29,7 +29,7 @@ $\mathbf{X} = \{X_{1}, X_{2}, \ldots, X_{m}\}$，m表示数据量的大小，输
 \begin{figure}
     \centering
     % Requires \usepackage{graphicx}
-    \includegraphics[width=.8\linewidth]{figure/气井分类框架图.pdf}
+    \includegraphics[width=.8\linewidth]{figure/气井分类框架图.vision.pdf}
     \caption{结合RFM与核密度估计的气井分类算法框架图}
     \label{fig:wellcla}
 \end{figure}
@@ -152,22 +152,24 @@ $\mathbf{X} = \{X_{1}, X_{2}, \ldots, X_{m}\}$，m表示数据量的大小，输
 \end{table}
 
 为了便于分析和对比各气井的产量变化趋势及其随时间的动态变化，以及观察不同气井之间的时间序列曲线是否存在交叉点，本文计划制作一套交互式折线图。这些折线图将详细展示所有井的产气量随时间变化的趋势。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\linewidth]{figure/DailyProduction_SN0004-04.pdf}
+    \caption{井AA3876-NF的产量随时间的变化曲线}
+    \label{fig:dailychange}
+\end{figure}
 
 在这套交互式图表中，用户将有能力选择特定的井来查看其产量变化，这使得用户能够专注于分析特定井的性能，同时也可以轻松切换查看其他井的产量数据。此外，这种交互式设计还允许用户检查曲线上每个点的具体值，从而获得详细的日产量信息。
 
-通过这种交互式的数据可视化方法，用户不仅可以直观地观察每口气井随时间的产量变化，还可以有效比较不同井之间的产量差异，以及识别任何可能的异常或显著的趋势变化。这种分析工具将大大增强数据的可访问性和可理解性，为气井的管理和优化提供有价值的洞察。
+通过这种交互式的数据可视化方法，用户不仅可以直观地观察每口气井随时间的产量变化，还可以有效比较不同井之间的产量差异，以及识别任何可能的异常或显著的趋势变化。这种分析工具将大大增强数据的可访问性和可理解性，为气井的管理和优化提供有价值的洞察。如图\ref{fig:dailychange}为
+选取的井AA3876-NF的产量随时间的变化曲线。
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.3,angle=0]{figure/productiongraph.png}
-    \caption{在一张图上同时绘制多口井产量随时间的变化曲线}
-    \label{fig:productionchange}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.3,angle=0]{figure/awellgraph.png}
-    \caption{井SN0004-04的产量随时间的变化曲线}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.3,angle=0]{figure/productiongraph.png}
+%     \caption{在一张图上同时绘制多口井产量随时间的变化曲线}
+%     \label{fig:productionchange}
+% \end{figure}
 \subsection{RFM参数选取}
 RFM模型对应的各组件为最近一次购买或交互（Recency）、购买或交互的频率（Frequency）、购买的货币价值（Monetary），是一种常用于客户价值分析的方法。
 尽管它最初是为零售业和直接营销设计的，用于评估客户的购买行为，但其核心概念可以被扩展和应用于各种不同领域，包括能源产业等。在气井的背景
