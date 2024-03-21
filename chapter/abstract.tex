@@ -1,36 +1,76 @@
 \begin{abstract}
-    
+    当前，数字化转型的浪潮的汹涌而至，石油天然气行业亦面临前所未有的变革与挑战。其中，作为气井行业的中流砥柱，陕西某油田企业的气井数量逐渐增多，老井管理渐渐难度加大。在此背景下，该企业深知数字化建设之必要，然而其目前仍处于以传统经验主导生产管理与决策制定的阶段，
+    这使得他们难以适应新时代的发展要求。
+    此外，由于其早期对数据管理的忽视，导致了珍贵的数据资产散落于各个不同的系统，再加上大量数据都由其员工线下掌握，导致该企业数据孤岛问题日益突出，影响了其决策的时效性与准确性。
 
-\keywords{}
+    基于以上痛点，受企业委托，本文提出了气井智能管控系统解决方案。该系统引入了机器学习、大数据分析等前沿技术，旨在实现气井全的智能化管理，进而提升气井生产管理与决策制定的质量和效果。
+    
+    本文的主要研究工作如下:
+    
+    (1)考虑到不同气井呈现出的不同的生产特性，本文创新性地将应用于营销领域的RFM（Recency, Frequency, Monetary） 模型引入气井分类问题。通过将RFM模型与核密度估计（Kernel Density Estimation，KDE）方法结合，提出了一种新颖的气井分类算法。
+    与传统聚类算法和时间聚类算法相比，该方法结果更稳定，且自带物理意义，有助于气井分类管理。该分类方法在后续产气量预测中亦能显著提升预测效果。
+    
+    (2)过去企业在需要制定方案时时，经常依赖经验盲目决策。因此，企业希望可以对气井产气量进行准确预测，以帮助他们使用数据驱动的方式科学地做出决策。基于此需求，本文提出一种基于Transformer算法的产气量预测模型。
+    该模型可综合利用混合输入(包括静态信息、过去已知未来不可知信息及过去未来已知历史数据)，采用GRU学习局部特征，利用自注意力机制学习不同时间步间的长期依赖关系。
+    最终实验效果显示其可以较为准确地预测未来产气量，为企业优化生产管理与决策提供了科学依据。
+    
+    (3)针对企业软件应用分散、数据孤岛等问题，本文在进行的详细需求分析的基础上，设计了一个包含数据连接、数据管理和智能分析三大模块的气井智能管控系统。该系统可有效整合分散数据资源，消除信息孤岛。同时，其智能分析模块提供了气井分类、产气量预测、开关井推荐等功能，可以大幅提升数据利用率与决策质量。
+
+\keywords{RFM 、核密度估计、产气量预测、数据管理}
 \end{abstract}
 \begin{englishabstract}
-    
-    
-\englishkeywords{}
+    Currently, as the wave of digital transformation surges, the oil and natural gas industry is also facing unprecedented changes and challenges. Among them, as the backbone of the gas well industry, a certain Shaanxi oil field enterprise has seen an increasing number of gas wells, and the management of old wells has gradually become more difficult. Against this backdrop, the company is acutely aware of the necessity for digital construction; however, it still remains in a stage dominated by traditional experience in production management and decision-making, making it difficult to meet the developmental demands of the new era.
+
+Moreover, due to early neglect in data management, precious data assets are scattered across various systems, coupled with a significant amount of data being handled offline by employees, leading to increasingly prominent data silo problems within the company, affecting the timeliness and accuracy of its decision-making.
+
+Based on these pain points and commissioned by the company, this paper proposes a solution in the form of an intelligent gas well management system. This system introduces cutting-edge technologies such as machine learning and big data analysis, aiming to achieve comprehensive intelligent management of gas wells, thereby enhancing the quality and effectiveness of gas well production management and decision-making.
+
+The main research works of this paper are as follows:
+
+(1) Considering the different production characteristics presented by different gas wells, this paper innovatively introduces the RFM (Recency, Frequency, Monetary) model, typically used in the marketing field, into the classification of gas wells. By combining the RFM model with the Kernel Density Estimation (KDE) method, a novel gas well classification algorithm is proposed. Compared with traditional clustering algorithms and time clustering algorithms, this method yields more stable results and inherently meaningful, facilitating the management of gas well classification. This classification method also significantly improves the predictive effect in subsequent gas production forecasts.
+
+(2) In the past, companies often relied on blind decision-making based on experience when needing to formulate plans. Therefore, there is a demand from the company to accurately predict the gas production of wells to help them make scientifically informed decisions in a data-driven manner. To meet this demand, this paper proposes a gas production forecasting model based on the Transformer algorithm. This model can comprehensively utilize mixed inputs (including static information, past known future unknown information, and past future known historical data), adopting GRU to learn local features and utilizing the self-attention mechanism to learn long-term dependencies between different time steps. The final experimental results show that it can accurately predict future gas production, providing a scientific basis for the company to optimize production management and decision-making.
+
+(3) Addressing issues such as dispersed software applications and data islands within the company, this paper designs an intelligent gas well management system containing three main modules: data connection, data management, and intelligent analysis, based on detailed requirement analysis. This system can effectively integrate dispersed data resources and eliminate information silos. Meanwhile, its intelligent analysis module provides functions such as gas well classification, gas production forecasting, and recommendations for opening and closing wells, significantly enhancing data utilization and decision-making quality. 
+\englishkeywords{RFM 、Kernel Density Estimation (KDE) 、Gas Production Forecasting 、Data Management}
 \end{englishabstract}
 \XDUpremainmatter
-\begin{symbollist}{lX}
-% 符号 & 符号名称\\
-% $[N]$                              &关联矩阵\\
-% $[N]^+$                            &输出关联矩阵\\
-% $[N]^-$                            &输入关联矩阵\\
-% $\mathbb{N}$                       &自然数集合\\
-% $\mathbb{N}^{+}$                   &正整数集合\\
-% $N$                                &Petri网\\
-% $P$                                &库所集合\\
-% $p$                                &一个库所\\
-% $p^\bullet$                        &库所$p$的后置\\
-% $^\bullet p$                       &库所$p$的前置\\
-% $\mathbb{Q}_{0}^{+}$               &正有理数集合\\
-% $R(N, M_0)$                        &网$(N, M_0)$的状态空间\\
-% $RG(N, M_0)$                       &网$(N, M_0)$的可达图\\
-% $\mathbb{R}^{+}$                   &正实数集合\\
-% $T$                                &变迁集合\\
-% $t$                                &一个变迁\\
-% $t^\bullet$                        &变迁$t$的后置\\
-% $^\bullet t$                       &变迁$t$的前置\\
-\end{symbollist}
-\begin{abbreviationlist}{lXX}
+% \begin{symbollist}{p{13.5em}p{20.5em}X}
+% % 符号 & 符号名称\\
+% % $[N]$                              &关联矩阵\\
+% % $[N]^+$                            &输出关联矩阵\\
+% % $[N]^-$                            &输入关联矩阵\\
+% % $\mathbb{N}$                       &自然数集合\\
+% % $\mathbb{N}^{+}$                   &正整数集合\\
+% % $N$                                &Petri网\\
+% % $P$                                &库所集合\\
+% % $p$                                &一个库所\\
+% % $p^\bullet$                        &库所$p$的后置\\
+% % $^\bullet p$                       &库所$p$的前置\\
+% % $\mathbb{Q}_{0}^{+}$               &正有理数集合\\
+% % $R(N, M_0)$                        &网$(N, M_0)$的状态空间\\
+% % $RG(N, M_0)$                       &网$(N, M_0)$的可达图\\
+% % $\mathbb{R}^{+}$                   &正实数集合\\
+% % $T$                                &变迁集合\\
+% % $t$                                &一个变迁\\
+% % $t^\bullet$                        &变迁$t$的后置\\
+% % $^\bullet t$                       &变迁$t$的前置\\
+% 符号 & 符号名称 \\
+% R & 最小开井近度 \\
+% F & 开井频度 \\
+% M & 平均开井产量 \\
+% WellNo & 气井号\\
+% Cluster & 井丛号\\
+% Station & 集气站号\\
+% $\delta $ & 井口压力\\
+% $\rho $ & 套压\\
+% $\sigma $ & 井口温度 \\
+% $\varphi $ & 日产量 \\
+% $\tau $ & 投产天数 \\
+% $h$ & 每日开井时间 \\
+
+% \end{symbollist}
+\begin{abbreviationlist}{p{3cm}p{6.5cm}X}
 % 缩略语 & 英文全称 & 中文对照\\
 % TPN           &Time Petri Net                              &时间Petri网\\
 % TdPN          &Timed Petri Net                             &时延Petri网\\
@@ -38,4 +78,12 @@
 % TPPN          &Time Place Petri Net                        &带时间库所的Petri网\\
 % TAPN          &Time Arc Petri Net                          &带时间弧的Petri网\\
 % TTPPN         &Time Transition Place Petri Net             &变迁库所时间网\\
+缩略语 & 英文全称 & 中文对照 \\
+RFM  & Recency, Frequency, Monetary model & “最近一次购买时间、购买频率、购买金额”模型 \\
+KDE  & Kernel Density Estimation & 核密度估计\\
+MAE  & Mean Absolute Error & 平均绝对误差 \\
+RCPE & Relative Change Percentage Error & 相对误差 \\
+LightGBM & Light Gradient Boosting Machine & 轻量级梯度提升框架 \\
+TFT & Temporal Fusion Transformers & 时间融合Transformer \\
+SQL & Structured Query Language & 结构化查询语言\\
 \end{abbreviationlist}

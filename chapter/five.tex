@@ -1,28 +1,45 @@
 \chapter{实验结果及应用}
+本章将展示气井分类和产气量预测的实验结果，并根据未来七天的产气量预测的结果，结合企业专家提供的开关井经验，对对井的开关井策略进行推荐。
 \section{数据集描述与环境说明}
-算法会在会在第\label{cha:data}节提供的数据集上进行验证。实验的硬件环境如表\ref{tab:predicEnHard}所示。软件环境如表\ref{tab:preicEnSO}所示。
+算法会在会在第\label{cha:data}节提供的数据集上进行验证。实验的环境如表\ref{tab:predicEnHard}所示。
+% 软件环境如表\ref{tab:preicEnSO}所示。
 \begin{table}[H]
-    \caption{产气量预测实验硬件环境}
+    \caption{产气量预测实验环境}
     \label{tab:predicEnHard}
     \begin{tblr}{hlines,vlines,
         columns = {valign=m,co=-1},
-        rows    = {halign=c},}
-        处理器 & 显卡 & 内存 & 硬盘 \\
-        Inter(R) Xeon(R) Silver 4261 cpu @ 2.10Hz & GeForce RTX 3090 & 256G & 1T \\
+        rows    = {halign=c},
+        cell{1}{1}={r=2}{c},
+        cell{3}{1} ={r=2}{c}
+        }
+        硬件环境 & 处理器 & 显卡 & 内存 & 硬盘 \\
+        & Inter(R) Xeon(R) Silver 4261 cpu @ 2.10Hz & GeForce RTX 3090 & 256G & 1T \\
+        软件环境& 操作系统 & 开发环境 & Anaconda & Python \\
+        & Windows 10 & Pycharm & 4.12.0 & 3.9 \\
     \end{tblr}
 \end{table}
-\begin{table}[h]
-    \caption{产气量预测实验软件环境}
-    \label{tab:preicEnSO}
-    \begin{tblr}{hlines,vlines,
-        columns = {valign=m,co=-1},
-        rows    = {halign=c},}
-        操作系统 & 开发环境 & Anaconda & Python \\
-        Windows 10 & Pycharm & 4.12.0 & 3.9 \\
-    \end{tblr}
-\end{table}
+% \begin{table}
+%     \caption{产气量预测实验软件环境}
+%     \label{tab:preicEnSO}
+%     \begin{tblr}{hlines,vlines,
+%         columns = {valign=m,co=-1},
+%         rows    = {halign=c},}
+%         操作系统 & 开发环境 & Anaconda & Python \\
+%         Windows 10 & Pycharm & 4.12.0 & 3.9 \\
+%     \end{tblr}
+% \end{table}
 \section{气井分类实验结果}
 由第三章可知，根据结合RFM与核密度的气井分类算法，气井将被分为四类，每一类的结果如表\ref{tab:everyclassnumber}所示。图\ref{fig:classResusca}为分类结果的展示。
+\begin{figure}[H]
+    \centering
+    \subfloat[数值结果]{\includegraphics[width=.45\linewidth]{figure/RFM_count_pie.pdf}%
+    \label{fig:wellclassbar}}
+    \hfil
+    \subfloat[RFM维度图]{\includegraphics[width=.45\linewidth]{figure/RFM_scatter.pdf}%
+    \label{fig:wellclasssca}}
+    \caption{气井分类结果（type1：活跃高价值 type2：不活跃高价值 type3：活跃一般价值 type4:不活跃一般价值）}
+    \label{fig:classResusca}
+\end{figure}
 \begin{table}[H]
     \caption{气井分类结果展示表}
     \label{tab:everyclassnumber}
@@ -36,16 +53,7 @@
         不活跃一般价值 & 24 \\
     \end{tblr}
 \end{table}
-\begin{figure}[H]
-    \centering
-    \subfloat[数值结果]{\includegraphics[width=.45\linewidth]{figure/RFM_count_bar.pdf}%
-    \label{fig:wellclassbar}}
-    \hfil
-    \subfloat[RFM维度图]{\includegraphics[width=.45\linewidth]{figure/RFM_scatter.pdf}%
-    \label{fig:wellclasssca}}
-    \caption{气井分类结果（type1：活跃高价值 type2：不活跃高价值 type3：活跃一般价值 type4:不活跃一般价值）}
-    \label{fig:classResusca}
-\end{figure}
+
 \section{产气量预测实验结果}
 \subsection{评估指标}
 为了验证本章所提出的基于transformer的气井产量预测算法的有效性，使用两个指标用于评估。其中一个是平均绝对误差（Mean Absolute Error, MAE），其可以衡量
@@ -90,6 +98,7 @@
 由表中可以看出,在不分类的情况下，预测结果的平均绝对误差（MAE）是0.477，相对百分比误差（RCPE）是0.058。除了不活跃一般价值的RCPE值高于不分类情况下的RCPE以外，这两个值在其他情况下均大于对每一类气井分别进行预测的结果。说明在进行气井产量预测时，先对气井进行分类再进行产气量预测在一定情况下时会达到比较好的效果的。
 
 （2）消融实验
+
 为了验证文中提出的基于Transformer模型中加入时间特征处理层和时域注意力层的有效性，本文对该算法设置消融实验来进行验证。将只加入时间特征处理层、只加入时域注意力层、两者都没有加的模型以及两者都加的模型（本文）在文中数据集上进行训练，
 使用其针对未来七天的产气量进行预测，用结果指标的中位值来近视表示其预测结果。本文所得到的实验结果为对所有气井分类后，再按照气井的数量加权得到的。最终结果如表\ref{tab:ablation}所示。
 \begin{table}[H]
@@ -146,25 +155,22 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
 
 本次实验的动机为：由于早期数据缺乏套压记录，这可能会影响预测模型的准确性。近期数据包含了所有重要特征，包括套压数据，并且能够代表整个时间序列的主要趋势和模式，那么只使用近期数据进行预测可能是一个合理的选择。
 \begin{table}[h]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
     \caption{使用部分数据集训练和使用全数据集训练的对比}
     \label{tab:alldatacomparison}
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
-    \textbf{气井类别} & \multicolumn{2}{c|}{{MAE}} & \multicolumn{2}{c|}{{RCPE}} \\ 
-    \cline{2-5} 
-    \textbf{(}$10^4 m^3$\textbf{)} & 使用部分数据 & 使用全部数据 & 使用部分数据 & 使用全部数据 \\ 
-    \hline
-    活跃高价值               & 0.193        & 0.225       & 0.023        & 0.030        \\ 
-    \hline
-    不活跃高价值               & 0.267        & 0.367        & 0.022        & 0.051        \\ 
-    \hline
-    活跃一般价值               & 0.101        & 0.103        & 0.047        & 0.042        \\ 
-    \hline
-    不活跃一般价值               & 0.120        & 0.122        & 0.165        & 0.163        \\ 
-    \hline
-    \end{tabular}
+    \begin{tblr}{hlines,vlines,
+        columns = {valign=m,co=-1},
+        rows    = {halign=c},
+        cell{1}{1} = {r=2}{c},
+        cell{1}{2} = {c=2}{},
+        cell{1}{4} = {c=2}{},
+        }
+        气井类别 & MAE& & RCPE & \\ 
+        & 使用部分数据 & 使用全部数据 & 使用部分数据 & 使用全部数据 \\ 
+        活跃高价值               & 0.193        & 0.225       & 0.023        & 0.030        \\ 
+        不活跃高价值               & 0.267        & 0.367        & 0.022        & 0.051        \\ 
+        活跃一般价值               & 0.101        & 0.103        & 0.047        & 0.042        \\
+        不活跃一般价值               & 0.120        & 0.122        & 0.165        & 0.163        \\ 
+    \end{tblr}
 \end{table}
 为对比预测效果，使用本文模型针对未来7天的产气量构建预测模型，分别使用所有数据和使用2017-01-01之后的数据构建两个不同的模型。根据分类结果将模型划分为四类，使用上文选定的两种模型对这5类型的气井分别进行预测。
 
@@ -241,7 +247,7 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \begin{tabular}{|c|c|c|c|c|c|c|} % Change 'l' to 'c' for center alignment
     \hline
     模型     & 气井类别 & RCPE mean & RCPE std & RCPE 25\% & RCPE 50\% & RCPE 75\% \\ \hline
-    LightGBM & 活跃高价值        &0.105     & 0.139     &0.029      0.053       &0.113 \\ \hline
+    LightGBM & 活跃高价值        &0.105     & 0.139     &0.029      &0.053       &0.113 \\ \hline
     LightGBM & 不活跃高价值      & 0.085     & 0.125    & 0.020     & 0.043     & 0.094     \\ \hline
     LightGBM & 活跃一般价值     & 0.131     & 0.147    & 0.038     & 0.093     & 0.167     \\ \hline
     LightGBM & 不活跃一般价值      & 0.433     & 0.845    & 0.097     & 0.228     & 0.477     \\ \hline
@@ -289,159 +295,88 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     Ours       & 不活跃一般价值      & 0.361     & 0.731    & 0.071     & 0.146     & 0.319     \\ \hline
     \end{tabular}
 \end{table}
-为直观展示预测结果，选择6口气井的预测结果如下文所示。
+为直观展示预测结果，选择6口气井的预测结果如\ref{fig:6predicre}所示。
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0018-03.pdf}
-    \caption{井XE8867-HU预测结果}
+    \subfloat[井XE8867-HU预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0018-03.pdf}}
+    \hfil
+    \subfloat[井XE3878-RE预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0037-01.pdf}}
+    \hfil
+    \subfloat[井SI2938-KI预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0049-08.pdf}}
+    \hfil
+    \subfloat[井SI2938-KI预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0075-04ST.pdf}}
+    \hfil
+    \subfloat[井LR7359-BR预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0087-03i.pdf}}
+    \hfil
+    \subfloat[井RC8375-BN预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0095-06.pdf}}
+    \caption{气井预测结果展示}
+    \label{fig:6predicre}
 \end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0037-01.pdf}
-    \caption{井XE3878-RE预测结果}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0049-08.pdf}
-    \caption{井SI2938-KI预测结果}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0075-04ST.pdf}
-    \caption{井HC8772-MA预测结果}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0087-03i.pdf}
-    \caption{井LR7359-BR预测结果}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.9\linewidth]{figure/forecast_SN0095-06.pdf}
-    \caption{井RC8375-BN预测结果}
-\end{figure}
-\section{开关井推荐}
-本小节将介绍开关井策略推荐实际问题的解决办法。首先收集数据，包括井口产气量、井底压力、温度、环境温度、气价、能源成本等相关参数。同时也需
-要采集各个气井的位置和特征等信息，以便进行搜索和选择。其次，根据实际情况和目标函数，选择合适的搜索算法。常见的搜索算法包括深度优先搜索、蚁群算法等。
-不同算法有不同的优缺点，需要根据实际情况进行评估和选择。然后确定搜索空间，搜索空间即可选取的所有井的集合，需要考虑到可行性和搜索效率的平衡。通常可
-以根据实际条件和目标函数，设置一些限制条件来缩小搜索空间，以提高搜索效率。接下来要执行搜索算法，根据设定的搜索算法，对搜索空间进行搜索。在搜索过程
-中，需要按照目标函数的要求，评估不同井进行开关的效果，并记录每次开关井的结果和成本。在搜索完成后，需要对所有开关井的结果进行评估，选取最优的开关井方案。
-评估时需要考虑到产量、成本、环境、管网模型等多方面因素，并综合权衡不同因素的影响，以选取最优的开关井方案。最后根据最优的开关井方案，实施相应的开关井策略。
 
+\section{开关井推荐}
+本小节将应用产气量预测的结果，根据企业日常开关井的规则进行开关井的策略推荐。
+\subsection{算法设计}
 气井开采过程中，通常会产生一定量的液体，包括水和油。产液量的增加会影响气井的产气量，因为液体在井筒中的积累会增加井筒的阻力，使气流的速度降低，
 从而影响气井的产气量。当气井处于低压低产阶段时，气相不能有效地携带液体，会导致积液现象。此时，如采用间歇生产方式（即周期性地开关井），可以利用
 关闭期间积累的压力差，在开启时将积聚在底部或中部的液体迅速排出。
+\begin{algorithm}[H]
+    \baselineskip=20pt
+    \caption{开关井策略}
+    \label{al:openclose}
+    \begin{algorithmic}[1]
+    \Require $df$: Dataset, $all\_forecasts$: 未来7天的预测结果, $auto\_well$: 自动切换井号, $target$: 目标值, $well\_no\_disable$: 不投入生产的井, $threshold$: 停产门槛, $pressure\_threshold$: 压力门槛,
+    \Ensure $close\_wells$: 需要关闭的井列表, $open\_wells$: 需要开启的井列表, $close2open\_wells$: 从关闭状态切换到开启状态的井列表, $open2close\_wells$: 从开启状态切换到关闭状态的井列表
+    
+    \State 初始化 $close\_wells$, $open\_wells$, $close2open\_wells$, $open2close\_wells$
+    \State 获取当前日期为 $dates\_time$
+    \State 确定因压差过大需要临时关闭的井为 $need\_close\_by\_pressure$
+    \State 获取当前开启和关闭井的信息为 $df\_open\_0$, $df\_close\_0$
+    
+    \For{$i = 1$ \textbf{至} $7$}
+        \State 确定尚未达到开启时间的井为 $still\_need\_close\_no$
+        \State 确定产量低于门槛需要关闭的井为 $need\_close\_by\_threshold$
+        \State 确定在第$i$天需要关闭的井为 $need\_close\_no_i$ 
+        \State 确定在第$i$天仍然可以开启的井为 $still\_can\_open\_no_i$ 
+        \State 确定在第$i$天可以从关闭状态切换到开启状态的井为 $can\_close2open\_no_i$ 
+        \State 确定在第$i$天可以从开启状态切换到关闭状态的井为 $can\_open2close\_no_i$ 
+        \State 计算第$i$天的当前产量为 $cur\_production_i$
+        \State 计算关闭井后的产量差值为 $delta_i$ 
+        \If{$delta_i > 0$}
+            \State 依次关闭开启时间较长的井来更新 $open2close\_wells_i$
+        \Else
+            \State 依次选择开启产量较高的井来更新 $close2open\_wells_i$
+        \EndIf
+        
+        \State 更新第$i$天关闭的井列表为 $df\_close_i$
+        \State 更新第$i$天开启的井列表为 $df\_open_i$
+    \EndFor
+    
+    \State \Return $close\_wells$, $open\_wells$, $close2open\_wells$, $open2close\_wells$
+    
+    \end{algorithmic}
+  \end{algorithm}
+
 但如果开关频率过高或关闭时间过短，则可能造成反复积排液、增加摩阻损失、降低生产效率。可若是开关频率过低或关闭时间过长，则可能导致底部水锥突
 破、增加水含率、降低天然气质量。
-\subsection{数据}
-本小节使用过去三十天的井口温度、压力、开关井时间、产气量值并借助前文训练的产气量模型来预测未来七天内每口井的预计产气量；本文使用前一天的井口温度、压力以
-及井丛的拓扑关系图等数据构建管网模型，计算压力差；通过对过去一段时间历史数据的总结得到每口井的开关井周期。
-\subsection{算法设计}
 
-（1）管网模型
+在此背景之下，本节基于第\ref{cha:data}节提供的数据，并借鉴专家经验，对开关井策略提出了建议。具体的推荐流程如算法\ref{al:openclose}所述。首先，进行产气量的预测，以估算第i天的产气量。然后，以企业设定的目标产气量$target$、不参与投入生产的井列表$well\_no\_disable$、根据经验规则自动进行开关控制的井列表$auto\_well$、以及设定的停产和压力门槛值$threshold$和$pressure\_threshold$为依据，进行开关井策略的制定。
 
-在处理复杂的地下流体动力学问题时，精确的解析解往往难以获得。在某些情况下，特别是考虑到地层的渗透性、流体的粘度以及井筒和储层之间的压力交互作用时，压力沿
-井深的变化近似于二次曲线。此处在计算平均压力时根据此理论采用了一个简化的假设，即压力分布沿井深呈二次曲线分布。在这个假设下，可以通过连接干管井丛的井口压
-力平均值（P1）和管道出口压力，即集气站进站压力（P2）计算出平均压力（avgPressure）。具体公式如式\eqref{eq:avgPressure}所示。
-\begin{equation}
-    \text{avgPressure} = \frac{2.0 \times (P1^3 - P2^3)}{3.0 \times (P1^2 - P2^2)}
-    \label{eq:avgPressure}
-\end{equation}
-式中，P1 和 P2 分别代表两个不同深度的压力值。
+策略制定的具体步骤包括：首先，排除因当日压力差异过大而暂时关闭的井，这些井在关闭后通常需要较长的时间进行调整。接着，获取当前的开关井状态信息。对于未来的第i天，需要排除那些根据企业规定尚未达到开井时间的井，并根据设定的停产门槛识别出产量低于阈值且需要关闭的井。
 
-本文使用了一种经验模型来计算临界温度（Tpc）和临界压力（Ppc）。这个模型是基于大量实验数据得出的，它将气体相对密度（$\delta$ ）作为输入参数。
-\begin{equation}
-    T_{pc} = 93.3 + 181 \times \delta - 7 \times \delta^2
-\end{equation}
-\begin{equation}
-    P_{pc} = 4.668 + 0.103 \times \delta - 0.259 \times \delta^2
-\end{equation}
-式中的气体相对密度$\delta$的默认取值为0.5962（无量纲）。
+随后，综合考虑达到停产门槛、压力门槛的井、不投入生产的井以及企业规定第i天需保持关闭状态的井，来确定第i天所有需要关闭的井。其次，从已经关闭的井中，除了那些已经标记为不再投入生产的井之外，识别出尚未达到停产门槛和压力门槛的井，这些井是可以被重新开启的。
 
-将实际温度（K）和平均压力（avgPressure）分别除以临界温度（Tpc）和临界压力（Ppc），得到温度和压力的缩减值（即相对于临界温度和临界压力的温度和压力）Tr和Pr。
-\begin{equation}
-    T_r = \frac{K}{T_{pc}}
-\end{equation}
-\begin{equation}
-    P_r = \frac{\text{avgPressure}}{P_{pc}}
-\end{equation}
-式中K为开尔文温度$K = C + 273.15$。
+最后，计算当前产量，并在可开启和可关闭的井中进行选择，执行开关井操作。通过比较操作前后的产量差值，如果差值大于零，则应进一步关闭开启时间较长的井；如果差值小于零，则应优先开启产量较高的井。通过这一流程，最终确定开关井的结果。
 
-压缩因子（Z-factor）是一个描述气体实际体积与理论（理想气体状态下的）体积之比的参数，是用于石油和天然气工程中评估气体的压缩性质的重要工具。压缩因子的值表明了实际气体与理想气体状态方程之间的偏离程度。
+\subsection{结果展示}
+选取目标产气量为1000（$10^4m^3$），压力阈值为2.0（$MPa$），最终的得到的开关井推荐结果如图\ref{fig:openclosereco}所示。更详细的开井关井的具体信息将在第六章系统实现中展示。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\linewidth]{figure/reco.pdf}
+    \caption{开关井推荐结果}
+    \label{fig:openclosereco}
+\end{figure}
 
-赞达尔方程\cite{Dranchuk1975CalculationOZ}（也称为Dranchuk-Aboukassem方程），是一种基于实验数据得出的经验公式，用于计算特定条件下的气体压缩因子。这个方程考虑了温度和压力的缩减值。具体公式如式\eqref{eq:Z-factor}所示。
-\begin{equation}
-    Z = 1 - \frac{3.52 \times P_r}{10^{0.9813T_r}} + \frac{0.274 \times P_r \times P_r}{10^{0.8157T_r}}
-    \label{eq:Z-factor}
-\end{equation}
-通过使用该方程，可以在已知缩减温度和缩减压力的情况下，估计出天然气在特定温度和压力条件下的压缩因子，进而帮助工程师们更准确地预测和计算气体的行为和性能。
-本式对于理解和计算实际天然气在地下储藏和输送过程中的物理行为至关重要。它使工程师能够更好地设计和优化天然气的提取、处理和运输系统。
-
-最后，可以使用Darcy-Weisbach方程\cite{brown2002history}来计算压力。这个方程描述了气体在管道中流动时，由于摩擦损失而引起的压力降。在这里，需要考虑到气体的压缩性，因此使用压缩因子（Z）来修正方程。
-\begin{equation}
-    \text{calP1} = \left(P2^2 + 3.948 \times 10^{-8} \times Q \times Q \times \delta \times K \times \frac{L}{d^{1.6}}\right)^{0.5}
-\end{equation}
-此处Q代表产气量，单位为万方/日，在计算中需要进行单位换算。d是气井的管径，单位为毫米，默认取值为20。
-当应用场景为气井传输管道（从井丛传输至集气站）时，$calP1$和$P1 - calP1$具有以下实际意义。
-
-$calP1$：这个值表示计算得到的管道起点（如单口气井）的压力。它反映了在给定的生产条件（温度、产气量等）以及管道参数（长度、直径等）下，为了克服管道摩擦损失所需要的起始压力。 
-
-$P1 - calP1$：这个值表示实际管道起点压力（P1）与计算得到的起点压力（$calP1$）之间的差值。这个差值可以用来评估管道的性能和系统效率。以下是几种可能的情况：
-
-当$P1 - calP1$接近于零时，表示实际压力和计算压力非常接近，说明管道系统运行良好，摩擦损失在可接受范围内。 
-
-当$P1 - calP1$为正值时，表示实际起点压力高于计算压力。这可能意味着管道系统存在过高的摩擦损失或是管道中存在堵塞等异常现象。 
-
-当$P1 - calP1$为负值时，表示实际起点压力低于计算压力。这可能意味着管道系统效率较高，但也可能导致管道中的气体流量不足，从而影响到集气站的运行。 
-
-通过分析$calP1$和$P1 - calP1$这两个值，可以为气井生产提供有用信息，有助于对生产参数进行调整和优化，提高气井生产效率和安全性。同时，这些信息也可以用于诊断管道系统是否存在异常，以便及时采取纠正措施。
-
-（2）搜索算法
-
-基于对实际问题的分析，借助FOA算法来完成搜索。
-主要对FOA算法中的距离进行了自定义：
-
-当目前产量$current\_amount>target$(预计想要达到的总产量)，系统需要从开着的井中选择一口井关闭，这时认为距离函数与压力差$delta\_pressure$和已经开井时间$open\_time$高度相关，因此距离函数定义如\eqref{eq:closewell}所示。
-\begin{equation}
-    \text{Dist}_i = \frac{1}{\sqrt{{\text{delta\_pressure}_i}^2 + {\text{open\_time}_i}^2}}
-    \label{eq:closewell}
-\end{equation}
-当目前产量$current\_amount<target$时，系统需要从可以开的井中选择一口井打开，本文认为压力差越小越好，产气量越大越好，因此距离函数与产气量、压力差有关，距离函数的定义如如\eqref{eq:openwell}
-\begin{equation}
-    \text{Dist}_i = \frac{\sqrt{{\text{delta\_pressure}_i}^2}}{\sqrt{{\text{pre\_production}_i}^2}}
-    \label{eq:openwell}
-\end{equation}
-将当前问题代入到果蝇优化算法具体的步骤如\ref{al:openwell}所示。
-\begin{algorithm}[H]
-    \caption{基于果蝇优化的开关井推荐算法}
-    \begin{algorithmic}[1]
-       \Require 目标产气量target区间，前一天的开关井情况
-       \Ensure  新的开关井策略
-       \State 初始化，以第一天的开关井情况作为初始值 init()
-       \While{true}
-            \If{current\_amount $>$ target}
-                \State 随机分配方向、距离，搜索出一定数量可以关的井 update()
-            \ElsIf{current\_amount $<$ target}
-                \State 随机分配方向、距离，搜索出一定数量可以开的井 update()
-            \Else
-                \State \Return 最终开关井策略
-            \EndIf
-            \State 计算自定义的种群适应度
-            \State 果蝇位置更新
-        \EndWhile
-    \end{algorithmic}
-    \label{al:openwell}
-\end{algorithm}
-
-（3）搜索空间
-
-在实际生产过程中，不是所有的关着井都可以开，需要动态的挑出这些可以开的井。根据分析，本文排除下面这些井，在这个周期不投入生产。
-
-1.去除用户前端自定义输入的尚不参与生产的井；
-
-2.根据历史数据计算开关井周期，如果某口井当前已经开井时间大于最大开井时间，则排除这口井；
-
-3.基于管网模型计算压力差，并根据用户输入阈值去除压力差过大的井；
-
-4.单口井的生产能力太低的井。
-（4）
+  \section{本章小节}
+  本章对前文提出的气井分类算法和气井产气量预测算法的结果进行了展示。气井被分为四类，通过对比实验发现，先分类再进行预测的准确率高于直接对气井进行预测的准确率。并通过消融实验证明了第四章基于Transformer的产气量预测算法模块的有效性。通过对实验结果树枝对比，发现GRU对模型准确性的
+  影响大于Transformer。随后，本文通过实验选取了LightGBM作为本文算法的对比算法，经过实验得出本文算法在预测准确率上高于LightGBM算法，但在预测时间上慢于LightGBM算法，因此保留两种模型以供企业在需要进行产气量预测时根据不同的需要挑选模型。最后，本文应用了对产气量预测后的预测结果，
+  根据企业的专家知识结合预测结果提出了开关井策略推荐算法，展示了算法流程，以及最后的推荐结果。
