@@ -93,7 +93,7 @@
     \label{fig:TFTprogess}
 \end{figure}
 
-\section{基于transformer的气井产量预测算法}
+\section{基于Transformer的气井产量预测算法}
 
 \subsection{数据处理及分类}
 \label{sec:datafoc}
@@ -185,10 +185,10 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 
 （3）局部时间特征处理
 
-我们将过去的输入序列$\bm{\xi}_{1:T}$提供给编码器，将未来的输入序列$\bm{\xi}_{T+1:T+t}$
+本文将过去的输入序列$\bm{\xi}_{1:T}$提供给编码器，将未来的输入序列$\bm{\xi}_{T+1:T+t}$
 提供给解码器。使用GRU生成一组均匀的时间特征，作为下一阶段的输入，用$\phi (t,n)$来表示，
 其中$\phi(t,n) \in {\phi(t, 1), \ldots, \phi(t, T+t)}$，$n$是位置指标。这种方式也可以完美处理观测到的过去和未来的输入不同而
-存在的差异。同时，为了让静态数据也参与到时间序列变量的编码中，我们使用$\mathbf{c_h}$上下文向量初始化第一个GRU的隐藏状态。在此处也使用门控跳跃链接：
+存在的差异。同时，为了让静态数据也参与到时间序列变量的编码中，本文使用$\mathbf{c_h}$上下文向量初始化第一个GRU的隐藏状态。在此处也使用门控跳跃链接：
 \begin{equation}
     \tilde{\bm{\phi}}(t, n) = \text{LayerNorm}\left(\tilde{\bm{\xi}}_{t+n} + \text{GLU}_{\phi}(\bm{\phi}(t, n))\right)
 \end{equation}
@@ -235,9 +235,9 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
     \end{aligned}        
 \end{equation}
 式中：$\mathbf{W}_v \in \mathbb{R}^{d_{\text{model}} \times d_v}$是跨所有头共享的值的权重，$\mathbf{W}_h \in \mathbb{R}^{d_{\text{attn}} \times d_{\text{model}}}$
-用于最终的线性映射。$\tilde{A}(\mathbf{Q}, \mathbf{K})$允许我们通过分析一组注意力权重来进行简单的可解释性研究。
+用于最终的线性映射。$\tilde{A}(\mathbf{Q}, \mathbf{K})$允许模型通过分析一组注意力权重来进行简单的可解释性研究。
 
-在进行了时间特征处理层之后，我们应用注意力层。将所有的时间特征组合成单一的矩阵即$\bm{\varPhi }(t) = \left[ \bm{\theta} (t, -k), \ldots, \bm{theta }(t, \tau_{\text{max}}) \right]^T$
+在进行了时间特征处理层之后，需要应用注意力层。将所有的时间特征组合成单一的矩阵即$\bm{\varPhi }(t) = \left[ \bm{\theta} (t, -k), \ldots, \bm{theta }(t, \tau_{\text{max}}) \right]^T$
 并在每个时间点（$N = \tau _{max} + k + 1$）应用时域注意力:
 \begin{equation}
     \mathbf{B}(t) = \text{InterpretableMultiHead}(\mathbf{\theta }(t), \mathbf{\theta }(t), \mathbf{\theta }(t)),
@@ -293,9 +293,9 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \subsection{基于transformer的气井产量预测算法}
 为实现产气量预测算法，本文以XE9984-HI 气井数据为例，展示协变量的表示。如表\ref{tab:realdata}
 所示，表分为上下两部分，具体每一列分别表示气井已经生产天数、集气站号、井丛好、气井号、配产量、日开井时间、井口压力、套压、井口温度、日产气量。得到气井数据后，需要先进行如章节\ref{sec:datafoc}所示的数据分段方法进行时间窗口的划分，由问题描述可知，训练样本可以表示为如式\eqref{eq:traindata}所示。
-以预测未来45天的产气量为例，此时$t=45$，根据经验，T可以取值为75。气井数据表中完整的一行表示一对$(\mathbf{x_i},\mathbf{y_i})$，对于每次训练，其输入包括：$75 \times 6$（已经生产天数\( \tau \)、日开井时间h、井口压力\( \delta \)、套压\( \rho \)、
-井口温度\( \sigma \)和日产量$\varphi $这四个动态变量） + $75 \times 3$（气井号WellNo，井丛号Cluster，集气站号Station这三个静态变量） + $45 \times 2$（如投产天数\( \tau \)、每日开井时间$h$这两个未来一直的动态变量）+ $75 \times 1$（历史产气量）。最终的输出为45维，表示未来45天的日产气量。
-在模型训练阶段，使用前文的输入，未来45天的数据作为监督目标，进行模型训练。在推理阶段，使用上述输入生成未来时刻的预测结果。
+以预测未来45天的产气量为例，此时$t=45$，根据经验，T可以取值为75。气井数据表中完整的一行表示一对$(\mathbf{x_i},\mathbf{y_i})$，对于每次训练，其输入包括：$75 \times 5$（已经生产天数\( \tau \)、日开井时间h、井口压力\( \delta \)、套压\( \rho \)和
+井口温度\( \sigma \)这五个动态变量） + $75 \times 3$（气井号WellNo，井丛号Cluster，集气站号Station这三个静态变量） + $45 \times 2$（如投产天数\( \tau \)、每日开井时间$h$这两个未来一直的动态变量）+ $75 \times 1$（历史产气量）。最终的输出为45维，表示未来45天的日产气量。
+在模型训练阶段，使用前文的输入，未来45天的数据作为监督目标，进行模型训练。在推理阶段，使用上述输入生成未来时刻的预测结果。具体训练流程如\ref{al:T-GRU}所示，其中验证阶段是可选的。其中平均绝对误差MAE的计算公式为$MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$
 \begin{table}
     \caption{XE9984-HI气井数据示例}
     \label{tab:realdata}
@@ -317,7 +317,36 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
     \end{tblr}
 \end{table}
 
+\begin{algorithm}[H]
+    \baselineskip=20pt
+    \caption{基于Transformer的气井产量预测算法训练过程}
+    \label{al:T-GRU}
+    \begin{algorithmic}[1]
+    \Require 滑动窗口后的训练数据集$X_{train}$和验证数据集$X_{valid}$
+    \Ensure 得到合适参数的模型M
 
+    \For{ i $\in$ epochs}
+        \State 初始化train\_mae为空
+        \For{ j $\in$ $X_{train}$}
+            \State 清除旧的梯度避免梯度累计
+            \State 前向传播得到产气量结果$y_{train}$
+            \State 与实际产气量结果根据式\ref{eq:loss}计算损失
+            \State 根据损失进行反向传播
+            \State 更新模型参数
+        \EndFor    
+        \State 计算并记录MAE损失
+        \State 调整学习率
+
+        \State 初始化valid\_mae为空
+        \For{j $\in$ $X_{valid}$}
+            \State 不计算梯度
+            \State 前向传播得到得到产气量结果$y_{valid}$
+            \State 计算并记录MAE损失
+        \EndFor
+        \State 计算验证集的平均mae损失
+    \EndFor
+    \end{algorithmic}
+  \end{algorithm}
 \subsection{基于LightGBM的气井预测算法}
 根据前文所述，本问题需要同时对1000余口气井构建时间序列预测模型，且问题包含多种类型的协变量，由第一章的国内外研究现状可知，机器学习模型中，当前对于时间序列预测问题的主流选择是特征工程+LightGBM模型的方法，这也是当前各大时间序列竞赛中大多数获胜方案所采用的策略。
 下面将对LightGBM模型的设计做具体介绍。
