@@ -14,38 +14,38 @@
 在本文的气井产气量预测问题中，使用协变量包括静态协变量(气井号WellNo，井丛号Cluster，集气站号Station)，随时间变化的协变量
 (Time-dependent Inputs)，可以细分为过去可知，未来不可知的协变量(Past-observed Inputs)，如井口压力\( \delta \)、套压\( \rho \)、
 井口温度\( \sigma \)和日产量$\varphi $，以及过去和未来都可知的协变量
-(Apriori-known Future Inputs)，如如投产天数\( \tau \)、每日开井时间$h$等。此处，每日开井时间是一个影响产气量的重要因素，因为若开井时间为0，则产气量必定
+(Apriori-known Future Inputs)，如如投产天数\( \lambda  \)、每日开井时间$h$等。此处，每日开井时间是一个影响产气量的重要因素，因为若开井时间为0，则产气量必定
 为0。未来时刻的开关井时间受人工调控开关井的影响，是可知的，因此将其设置为过去和未来都可知的协变量。
 \section{问题描述}
 \subsection{单井产气量预测问题描述}
 对于单个气井，其输入是气井一段时间的产量数据及对应的气井动态数据。对于单井一段时间内的数据，将其记为
 \begin{equation}
-    \left\{ (x_{\delta}^i, x_{\rho}^i, x_{\sigma}^i, x_{\tau}^i, x_{h}^i, y^i_{\varphi }) \mid i = 1, 2, \ldots, T \right\}
+    \left\{ (x_{\delta}^i, x_{\rho}^i, x_{\sigma}^i, x_{\lambda}^i, x_{h}^i, y^i_{\varphi }) \mid i = 1, 2, \ldots, T \right\}
     \label{eq:singlewell}
 \end{equation}
 其中\( T \)表示气井数据的总时间长度，其中上标$i$表示时刻$i$，下标表示不同的特征，分别如下所示：井口压力\( \delta \)、套压\( \rho \)、
-井口温度\( \sigma \)、投产天数\( \tau \)、每日开井时间$h$、日产量$\varphi $。则问题可以定义为：基于气井过去一段时间内的井口压力\( \delta \)等数据来预测气井未来一段时间内的产量，记要预测的未来时间步长$t$。形式化
+井口温度\( \sigma \)、投产天数\( \lambda \)、每日开井时间$h$、日产量$\varphi $。则问题可以定义为：基于气井过去一段时间内的井口压力\( \delta \)等数据来预测气井未来一段时间内的产量，记要预测的未来时间步长$t$。形式化
 地描述其输入如公式\eqref{eq:sinpredic}所示。
 \begin{equation}
     \left\{
     \begin{array}{ll}
-    (x_{\tau}^i, x_{\rho}^i, x_{\sigma}^i, x_{\tau}^i, x_{h}^i, y_{\varphi }^i) &  i = 1, 2, ..., T \\
-    (x_{\tau}^{T+j}, x_{h}^{T+j}) & j = 1, 2, ..., t
+    (x_{\delta}^i, x_{\rho}^i, x_{\sigma}^i, x_{\lambda}^i, x_{h}^i, y^i_{\varphi }) &  i = 1, 2, ..., T \\
+    (x_{\lambda}^{T+j}, x_{h}^{T+j}) & j = 1, 2, ..., \tau
     \end{array}
     \right.
     \label{eq:sinpredic}
 \end{equation}    
-输出为$\left\{ y^{T+1}_{\varphi}, y^{T+2}_{\varphi}, \ldots, y^{T+t}_{\varphi} \right\}$。
+输出为$\left\{ y^{T+1}_{\varphi}, y^{T+2}_{\varphi}, \ldots, y^{T+\tau}_{\varphi} \right\}$。
 
 对于时序数据预测问题，需要将一整条数据依据时间点划分为训练数据和测试数据，然后需要设置训练数据步长与滑动步长，从而生成多个样本。因此为将问题转换为时间
-序列问题，需设置新的符合并对问题作进一步地定义。记训练数据输入步长为$T$,$T$通常大于等于要预测的时间步长$t$,记滑动步长为$s$,记训练数据和测试数
-据的划分时间点为$N_0$，记$\mathbf{X_i} = \{x^i_\delta, x^i_\rho, x^i_\sigma, x^i_\tau, x^i_h\}, \quad \mathbf{Y_i} = y^i_\varphi$，则训练数据可以用式\eqref{eq:traindata}表示。
+序列问题，需设置新的符合并对问题作进一步地定义。记训练数据输入步长为$T$,$T$通常大于等于要预测的时间步长$\tau$,记滑动步长为$s$,记训练数据和测试数
+据的划分时间点为$N_0$，记$\mathbf{X_i} = \{x^i_\delta, x^i_\rho, x^i_\sigma, x^i_\lambda, x^i_h\}, \quad \mathbf{Y_i} = y^i_\varphi$，则训练数据可以用式\eqref{eq:traindata}表示。
 \begin{equation}
     \begin{aligned}
-    x_{\text{train}}^{(1)} &: \{ (X_1, Y_1), ..., (X_{T}, Y_{T}), (x^{T+1}_{\tau }, x^{T+1}_{h }), ..., (x^{T+t}_{\tau }, x^{T+t}_{h}) \}, \\
-    y_{\text{train}}^{(1)} &: \{Y_{T+1}, ... ,Y_{T+t}\}, \\
-    x_{\text{train}}^{(2)} &: \{ (X_{1+s}, Y_{1+s}), ..., (X_{T+s}, Y_{T+s}), (x^{T+s+1}_\tau , x^{T+s+1}_h ), ..., (x^{T+s+t}_{\tau }, x^{T+s+t}_{h}) \}, \\
-    y_{\text{train}}^{(2)} &: \{Y_{T+s+1}, ... ,Y_{T+s+t}\}, \\
+    x_{\text{train}}^{(1)} &: \{ (X_1, Y_1), ..., (X_{T}, Y_{T}), (x^{T+1}_{\lambda }, x^{T+1}_{h }), ..., (x^{T+\tau}_{\lambda }, x^{T+\tau}_{h}) \}, \\
+    y_{\text{train}}^{(1)} &: \{Y_{T+1}, ... ,Y_{T+\tau}\}, \\
+    x_{\text{train}}^{(2)} &: \{ (X_{1+s}, Y_{1+s}), ..., (X_{T+s}, Y_{T+s}), (x^{T+s+1}_\lambda , x^{T+s+1}_h ), ..., (x^{T+s+\tau}_{\lambda }, x^{T+s+\tau}_{h}) \}, \\
+    y_{\text{train}}^{(2)} &: \{Y_{T+s+1}, ... ,Y_{T+s+\tau}\}, \\
     & \vdots
     \end{aligned}
     \label{eq:traindata}
@@ -53,15 +53,15 @@
 测试数据可以用式\eqref{eq:testdata}来表示。
 \begin{equation}
     \begin{aligned}
-    x_{\text{test}}^{(1)} &: \{ (X_{N_0}, Y_{N_0}), ..., (X_{N_0 + T}, Y_{N_0 + T}), (x^{N_0 + T+1}_{\tau }, x^{N_0 + T+1}_{h }), ..., (x^{N_0 + T+t}_{\tau }, x^{N_0 + T+t}_{h}) \}, \\
-    y_{\text{test}}^{(1)} &: \{Y_{N_0 + T+1}, ... ,Y_{N_0 + T+t}\}, \\
+    x_{\text{test}}^{(1)} &: \{ (X_{N_0}, Y_{N_0}), ..., (X_{N_0 + T}, Y_{N_0 + T}), (x^{N_0 + T+1}_{\lambda }, x^{N_0 + T+1}_{h }), ..., (x^{N_0 + T+\tau}_{\lambda }, x^{N_0 + T+\tau}_{h}) \}, \\
+    y_{\text{test}}^{(1)} &: \{Y_{N_0 + T+1}, ... ,Y_{N_0 + T+\tau}\}, \\
     & \vdots
     \end{aligned}
     \label{eq:testdata}
 \end{equation}
-最终，问题定义为构建机器学习/深度学习预测器$f_{ML }$,根据一段连续生产的历史数据预测未来时间长度$t$内的流量，即
+最终，问题定义为构建机器学习/深度学习预测器$f_{ML }$,根据一段连续生产的历史数据预测未来时间长度$\tau$内的流量，即
 \begin{equation}
-    (Y_{n+1}, \ldots, Y_{n+t}) = f_{ML}(X_n, Y_n, X_{n-1}, Y_{n-1}, \ldots, X_{n-T+1}, Y_{n-T+1}, X^{n+1}_{\tau}, X^{n+1}_{h}, X^{n+t}_{\tau}, X^{n+t}_{h})
+    (Y_{n+1}, \ldots, Y_{n+\tau}) = f_{ML}(X_n, Y_n, X_{n-1}, Y_{n-1}, \ldots, X_{n-T+1}, Y_{n-T+1}, X^{n+1}_{\lambda}, X^{n+1}_{h}, X^{n+\tau}_{\lambda}, X^{n+\tau}_{h})
 \end{equation}
     
 \subsection{多井产气量预测问题描述}
@@ -109,7 +109,7 @@
     \caption{滑动窗口数据分段示意图}
     \label{fig:slidewindow}
 \end{figure}
-如图\ref{fig:slidewindow}所示，本文将预测步长设置为t， 将滑动窗口长度设置为$s$，用户在训练过程中，可以根据自己的需要对气井的时间序列进行划分。在取出样本序列后，每个样本分段的数据差异大且复杂，
+如图\ref{fig:slidewindow}所示，本文将预测步长设置为\tau， 将滑动窗口长度设置为$s$，用户在训练过程中，可以根据自己的需要对气井的时间序列进行划分。在取出样本序列后，每个样本分段的数据差异大且复杂，
 未经标准化处理的样本分段会导致机器学习模型的学习速度十分缓慢，甚至无法更新模型参数，需要对每个样本分段进行无量纲化处理，将所有特征放缩至$[0,1]$之间,即
 \begin{equation}
     x'_i = \frac{x_i - \mu}{\sigma}
@@ -129,7 +129,7 @@ Decoder部分使用自注意力机制来解码未来时刻的预测值，每个�
 部上下文，从而提高基于注意力架构模型的性能。本文将采用时间特征处理层GRU来进行时间序列编码，
 相较于LSTM，其具有更简单的结构，它合并了LSTM的遗忘门和输入门，因此参数数量较少，在训练和推理过程中的计算效率更高，且其有更快的训练速度，。在本文数据集规模较大的情况下进行实验和调整参数时更加高效。
 
-在进行GRU编码后，本文采用自注意力来学习不同时间步之间的长期关系。最终借鉴MQRNN框架\cite{wen2018multihorizon}的思路，本文采用分位数回归预测作为模型的输出方式。
+在进行GRU编码后，本文采用自注意力来学习不同时间步之间的长期关系。最后借鉴了MQRNN框架\cite{wen2018multihorizon}的思路，采用分位数回归预测作为模型的输出方式。
 
 \begin{figure}[H]
     \centering
@@ -138,17 +138,17 @@ Decoder部分使用自注意力机制来解码未来时刻的预测值，每个�
     \label{fig:TFT}
 \end{figure}
 
-综上所述，网络模型主要由门控残差网络、输入层、时间特征处理层、时域注意力层、position-wise前馈层以及分位数预测层组成具体如下：
+综上所述，网络模型主要由门控残差网络、输入层、时间特征处理层、时域注意力层、position-wise前馈层以及分位数预测层。组成具体如下文所示。
 
 （1） 输入层
 
 本模型根据企业专家经验选取了多种数据并将他们融合。具体地由图中可知：输入层包括三种类型的变量。最左侧的$S$是静态变量，包括气井号$WellNO$、井丛号$cluster$和集气站号$Station$。从$(X_1, Y_1)$到$(X_{T}, Y_{T})$代表的是从过去时刻已知
 ，但未来不可知的随时间变化的变量，包括井口压力\( \delta \)、套压\( \rho \)、
-井口温度\( \sigma \)和日产量$\varphi $。最右侧的$(x^{T+1}_{\tau }, x^{T+1}_{h })$到$(x^{T+t}_{\tau }, x^{T+t}_{h})$代表的是从过去$t-k$到未来$t+\tau_{max}$时刻
-都可知的随时间变化的变量，包括已经如投产天数\( \tau \)、每日开井时间$h$等。
+井口温度\( \sigma \)和日产量$\varphi $。最右侧的$(x^{T+1}_{\lambda }, x^{T+1}_{h })$到$(x^{T+\tau}_{\lambda }, x^{T+\tau}_{h})$代表的是从过去到未来$T+\tau$时刻
+都可知的随时间变化的变量，包括已经如投产天数\( \lambda \)、每日开井时间$h$等。
 
-其中静态变量$S$需要经过静态协变量编码器来整合来自静态元数据的信息。具体地，本文使用上文采用的门控残差网络来编码产生上下文向量$\mathbf{c}_h$，$\mathbf{c}_e$
-，$\mathbf{c}_h$将传入时间特征的局部处理层作为GRU的初始输入，$\mathbf{c}_e$可与进行时间特征编码后的动态变量一起进入GRN，流入多头注意力。
+其中静态变量$S$需要经过静态协变量编码器来整合来自静态元数据的信息。具体地，本文使用门控残差网络来编码产生上下文向量$\mathbf{c}_h$和$\mathbf{c}_e$
+，其中$\mathbf{c}_h$将传入时间特征的局部处理层作为GRU的初始输入，$\mathbf{c}_e$可与进行时间特征编码后的动态变量一起进入GRN，流入多头注意力进行下一步计算。
 
 （2）门控残差网络
 
@@ -185,14 +185,14 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 
 （3）局部时间特征处理
 
-本文将过去的输入序列$\bm{\xi}_{1:T}$提供给编码器，将未来的输入序列$\bm{\xi}_{T+1:T+t}$
+本文将过去的输入序列$\bm{\xi}_{1:T}$提供给编码器，将未来的输入序列$\bm{\xi}_{T+1:T+\tau}$
 提供给解码器。使用GRU生成一组均匀的时间特征，作为下一阶段的输入，用$\phi (t,n)$来表示，
-其中$\phi(t,n) \in {\phi(t, 1), \ldots, \phi(t, T+t)}$，$n$是位置指标。这种方式也可以完美处理观测到的过去和未来的输入不同而
+其中$\phi(t,n) \in {\phi(t, 1), \ldots, \phi(t, T+\tau)}$，$n$是位置指标。这种方式也可以完美处理观测到的过去和未来的输入不同而
 存在的差异。同时，为了让静态数据也参与到时间序列变量的编码中，本文使用$\mathbf{c_h}$上下文向量初始化第一个GRU的隐藏状态。在此处也使用门控跳跃链接：
 \begin{equation}
     \tilde{\bm{\phi}}(t, n) = \text{LayerNorm}\left(\tilde{\bm{\xi}}_{t+n} + \text{GLU}_{\phi}(\bm{\phi}(t, n))\right)
 \end{equation}
-其中$n \in [ -k, \tau_{\max}]$是位置指标。
+其中$n \in [1, T+\tau]$是位置指标。
 
 为了让静态变量在模型中充分发挥作用，将静态变量和动态变量都经过GRN编码再送入时域注意力层，公式如\eqref{eq:staticencoder}层。
 \begin{equation}
@@ -210,7 +210,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \begin{equation}
     \text{Attention}(Q, K, V) = A(Q,K)V
 \end{equation}
-其中$A()$是一个归一化函数，\( N \) 是进入注意力层的时间步数（即 \( k + t_{\text{max}} \)）。常用的选择是缩放点积注意力：
+其中$A()$是一个归一化函数。过去常用的选择是缩放点积注意力：
 \begin{equation}
     A(Q, K) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_{\text{attn}}}}\right)
 \end{equation}
@@ -223,7 +223,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \end{equation}
 其中\( W^K_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^Q_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^V_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_v} \) 
 是针对键、查询和值的头特定权重 \( W_H \in \mathbb{R}^{m \cdot h \times d_{\text{model}}} \) 用于将所有头输出合并。
-为了展示特定特征的重要性，做出的修改如下：
+本文参考了TFT的思路，为了展示特定特征的重要性，做出的修改如下：
 \begin{equation}
     \text{InterpretableMultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \tilde{\mathbf{H}} \mathbf{W}_h
 \end{equation}
@@ -237,12 +237,12 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 式中：$\mathbf{W}_v \in \mathbb{R}^{d_{\text{model}} \times d_v}$是跨所有头共享的值的权重，$\mathbf{W}_h \in \mathbb{R}^{d_{\text{attn}} \times d_{\text{model}}}$
 用于最终的线性映射。$\tilde{A}(\mathbf{Q}, \mathbf{K})$允许模型通过分析一组注意力权重来进行简单的可解释性研究。
 
-在进行了时间特征处理层之后，需要应用注意力层。将所有的时间特征组合成单一的矩阵即$\bm{\varPhi }(t) = \left[ \bm{\theta} (t, -k), \ldots, \bm{theta }(t, \tau_{\text{max}}) \right]^T$
-并在每个时间点（$N = \tau _{max} + k + 1$）应用时域注意力:
+在进行了时间特征处理层之后，需要应用注意力层。将所有的时间特征组合成单一的矩阵即$\bm{\varPhi }(t) = \left[ \bm{\theta} (t, 1), \ldots, \bm{\theta }(t, T+\tau) \right]^T$
+并在每个时间点应用时域注意力:
 \begin{equation}
     \mathbf{B}(t) = \text{InterpretableMultiHead}(\mathbf{\theta }(t), \mathbf{\theta }(t), \mathbf{\theta }(t)),
 \end{equation}
-生成了$\mathbf{B}(t) = \left[ \mathbf{\beta }(t, -k), \ldots, \mathbf{\beta }(t, \tau_{\max}) \right]$。在自注意力层之后，增加了一个额外
+生成了$\mathbf{B}(t) = \left[ \mathbf{\beta }(t, 1), \ldots, \mathbf{\beta }(t, T+\tau) \right]$。在自注意力层之后，增加了一个额外
 的门控层来促进训练：
 \begin{equation}
     \boldsymbol{\delta}(t, n) = \text{LayerNorm}(\boldsymbol{\theta }(t, n)) + \text{GLU}_{\boldsymbol{\delta}}(\boldsymbol{\beta}(t, n)).
