@@ -109,7 +109,7 @@
     \caption{滑动窗口数据分段示意图}
     \label{fig:slidewindow}
 \end{figure}
-如图\ref{fig:slidewindow}所示，本文将预测步长设置为\tau， 将滑动窗口长度设置为$s$，用户在训练过程中，可以根据自己的需要对气井的时间序列进行划分。在取出样本序列后，每个样本分段的数据差异大且复杂，
+如图\ref{fig:slidewindow}所示，本文将预测步长设置为$\tau$， 将滑动窗口长度设置为$s$，用户在训练过程中，可以根据自己的需要对气井的时间序列进行划分。在取出样本序列后，每个样本分段的数据差异大且复杂，
 未经标准化处理的样本分段会导致机器学习模型的学习速度十分缓慢，甚至无法更新模型参数，需要对每个样本分段进行无量纲化处理，将所有特征放缩至$[0,1]$之间,即
 \begin{equation}
     x'_i = \frac{x_i - \mu}{\sigma}
@@ -223,7 +223,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \end{equation}
 其中\( W^K_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^Q_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{attn}}} \), \( W^V_{(h)} \in \mathbb{R}^{d_{\text{model}} \times d_v} \) 
 是针对键、查询和值的头特定权重 \( W_H \in \mathbb{R}^{m \cdot h \times d_{\text{model}}} \) 用于将所有头输出合并。
-本文参考了TFT的思路，为了展示特定特征的重要性，做出的修改如下：
+本文为了展示特定特征的重要性，做出的修改如下：
 \begin{equation}
     \text{InterpretableMultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \tilde{\mathbf{H}} \mathbf{W}_h
 \end{equation}
@@ -265,7 +265,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 本文使用了分位数损失预测的方式。具体来说就是回归模型在对目标产量进行预测的时候不只预测$y$的一个期望值$\hat{y}$，
 而是预测出$y$的概率分布中不同百分位数（如25\%,50\%,75\%）的值。分位数预测是根据上一步输出的线性变换生成的：
 \begin{equation}
-    \hat{\boldsymbol{y_i}}(q, t, \tau) = f_q (\tau, y_{i,1:T}, Z_{i,1:T}, X_{i,T:T+t}, S_i)
+    \hat{\boldsymbol{y_i}}(q, t, \tau) = f_q (\tau, y_{i,1:T}, Z_{i,1:T}, X_{i,T:T+\tau}, S_i)
 \end{equation}
 其中，$\hat{\boldsymbol{y_i}}(q, t, \tau)$表示在时刻t，对未来$\tau$步进行预测的q分位数，$f_q(\cdot)$为预测模型，$ y_{i,1:T}$表示历史目标变量，$Z_{i,1:T}$表示过去已知，未来不可知的动态协变量，$X_{i,T:T+t}$表示过去未来都可知的动态协变量，$S_i$表示静态协变量。
 本文采用联合最小化分位数损失来训练模型，并将所有的分位数方法相加，具体如式\eqref{eq:loss}所示。
@@ -293,7 +293,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \subsection{基于transformer的气井产量预测算法}
 为实现产气量预测算法，本文以XE9984-HI 气井数据为例，展示协变量的表示。如表\ref{tab:realdata}
 所示，表分为上下两部分，具体每一列分别表示气井已经生产天数、集气站号、井丛好、气井号、配产量、日开井时间、井口压力、套压、井口温度、日产气量。得到气井数据后，需要先进行如章节\ref{sec:datafoc}所示的数据分段方法进行时间窗口的划分，由问题描述可知，训练样本可以表示为如式\eqref{eq:traindata}所示。
-以预测未来45天的产气量为例，此时$t=45$，根据经验，T可以取值为75。气井数据表中完整的一行表示一对$(\mathbf{x_i},\mathbf{y_i})$，对于每次训练，其输入包括：$75 \times 5$（已经生产天数\( \tau \)、日开井时间h、井口压力\( \delta \)、套压\( \rho \)和
+以预测未来45天的产气量为例，此时$\tau=45$，根据经验，T可以取值为75。气井数据表中完整的一行表示一对$(\mathbf{x_i},\mathbf{y_i})$，对于每次训练，其输入包括：$75 \times 5$（已经生产天数\( \lambda  \)、日开井时间h、井口压力\( \delta \)、套压\( \rho \)和
 井口温度\( \sigma \)这五个动态变量） + $75 \times 3$（气井号WellNo，井丛号Cluster，集气站号Station这三个静态变量） + $45 \times 2$（如投产天数\( \tau \)、每日开井时间$h$这两个未来一直的动态变量）+ $75 \times 1$（历史产气量）。最终的输出为45维，表示未来45天的日产气量。
 在模型训练阶段，使用前文的输入，未来45天的数据作为监督目标，进行模型训练。在推理阶段，使用上述输入生成未来时刻的预测结果。具体训练流程如\ref{al:T-GRU}所示，其中验证阶段是可选的。其中平均绝对误差MAE的计算公式为$MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$
 \begin{table}
@@ -330,7 +330,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
         \For{ j $\in$ $X_{train}$}
             \State 清除旧的梯度避免梯度累计
             \State 前向传播得到产气量结果$y_{train}$
-            \State 与实际产气量结果根据式\ref{eq:loss}计算损失
+            \State 与实际产气量结果根据式\eqref{eq:loss}计算损失
             \State 根据损失进行反向传播
             \State 更新模型参数
         \EndFor    

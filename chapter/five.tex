@@ -1,5 +1,5 @@
 \chapter{实验结果及应用}
-本章将展示气井分类和产气量预测的实验结果，并根据未来七天的产气量预测的结果，结合企业专家提供的开关井经验，对对井的开关井策略进行推荐。
+本章将展示气井分类和产气量预测的实验结果，并根据未来七天的产气量预测的结果，结合企业专家提供的开关井经验，对井的开关井策略进行推荐。
 \section{数据集描述与环境说明}
 算法会在会在第\ref{cha:data}节提供的数据集上进行验证。实验的环境如表\ref{tab:predicEnHard}所示。
 % 软件环境如表\ref{tab:preicEnSO}所示。
@@ -48,9 +48,9 @@
         rows    = {halign=c},}
         气井类别 & 数量 \\
         活跃高价值 & 447 \\
-        不活跃高价值 & 266 \\
-        活跃一般价值 & 332 \\
-        不活跃一般价值 & 24 \\
+        不活跃高价值 & 332 \\
+        活跃一般价值 & 24 \\
+        不活跃一般价值 & 266 \\
     \end{tblr}
 \end{table}
 
@@ -67,7 +67,7 @@
     RCPE = \frac{\sum_{i=1}^{n} |y_i| - \sum_{i=1}^{n} |y'_i|}{\sum_{i=1}^{n} |y_i|}
     \label{eq:RCPE}
 \end{equation}
-上面两式中，$i$表示索引，用于遍历数据集中的每一个数据点。例如，如果我们有一个包含多个观测值的数据集，$i$就用来表示这些观测值的序号，从第一个观测值
+上面两式中，$i$表示索引，用于遍历数据集中的每一个数据点。例如，有一个包含多个观测值的数据集，$i$就用来表示这些观测值的序号，从第一个观测值
 到第$n$个观测值。$y$表示真实值，也就是实际产量，$\hat{y}$表示预测值，也就是通过模型预测得到的产量。
 
 \subsection{对比实验}
@@ -122,7 +122,7 @@
 
 经过对手头的单井日报数据进行处理，累计10年，1000余口气井约有总共约有160多万条数据。为了展示各算法的预测性能，选取数量最多的一类井活跃高价值的产量数据作为测试集进行测试。如表\ref{fig:modelselection}所示，基于注意力机制的seq2seq模型，
 由于模型结构限制，无法包含未来时刻的开关井信息，导致预测效果显著劣于其余三个模型。
-lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略优于TFT和lightGBM模型，预测时间本文模型优于TFT和lightGBM模型。但是在模型训练阶段，lightGBM模型(10min)显著快于TFT模型(4h)及本文(2.5h)。故最终保留
+lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略优于TFT和lightGBM模型，预测时间本文模型优于TFT和lightGBM模型。但是在模型训练阶段，lightGBM模型(10min)显著快于TFT模型(4h)及本文(1.5h)。故最终保留
 本文中的模型和lightGBM模型。
 \begin{table}[H]
     \caption{模型选择实验结果}
@@ -133,7 +133,7 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
         cell{2}{1} = {r=4}{c}}
         测试对象 & 模型 & MAE($10^4 \ m^3$) & RCPE(\%)& 预测时间(s)\\ 
         活跃高价值气井& TFT          & 0.241                       & 3.14              & 8.369         \\       
-                                    & LightGBM     & 0.262                       & 3.80              & 0.89     \\            
+                                    & LightGBM     & 0.334                       & 4.50              & 0.89     \\            
                                     & Seq2seq      & 0.512                       & 10.25             & 5.25   \\             
                                     & Ours         & 0.225                       & 3.02              & 7.29 \\               
     \end{tblr}
@@ -187,7 +187,7 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
 
 （5）本模型和LightGBM模型对比
 
-实验基本设置： 在这个实验中，我们选用本模型和LightGBM对未来7天的产气量进行预测。实验结果是对属于该日均产气量范围内的所有气井进行预测并计算其指标的中位数统计值得到的。
+实验基本设置： 在这个实验中，本文选用本模型和LightGBM对未来7天的产气量进行预测。实验结果是对属于该日均产气量范围内的所有气井进行预测并计算其指标的中位数统计值得到的。
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
@@ -195,11 +195,11 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \label{tab:prediction_comparison}
     \begin{tabular}{|c|c|c|c|}
     \hline
-    模型     & 气井种类 & MAE($10^4 m^3$) & RCPE(\%) \\ \hline
-    LightGBM & 活跃高价值       &0.234            & 0.042 \\ \hline
-    LightGBM & 不活跃高价值     & 0.341           & 0.066    \\ \hline
-    LightGBM & 活跃一般价值      & 0.136           & 0.093    \\ \hline
-    LightGBM & 不活跃一般价值      & 0.128           & 0.228    \\ \hline
+    模型     & 气井种类 & MAE & RCPE \\ \hline
+    LightGBM & 活跃高价值       &0.334            & 0.072 \\ \hline
+    LightGBM & 不活跃高价值     & 0.441           & 0.096    \\ \hline
+    LightGBM & 活跃一般价值      & 0.236           & 0.103    \\ \hline
+    LightGBM & 不活跃一般价值      & 0.228           & 0.328    \\ \hline
     Ours      & 活跃高价值        &0.225            &0.030      \\ \hline
     Ours      & 不活跃高价值      & 0.367           & 0.051   \\ \hline
     Ours      & 活跃一般价值      & 0.103           & 0.042    \\ \hline
@@ -209,17 +209,12 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
 
 实验结果对比与分析： 根据上述统计结果表格，可以看出：
 
-对于不活跃一般价值的气井，本文模型的MAE和RCPE分别为0.122和0.163，而LightGBM模型分别为0.128和0.228。对于这类气井而言，本文模型的预测性能更好。
-对于活跃一般价值的气井，本文模型的MAE和RCPE分别为0.103和0.042，而LightGBM模型分别为0.136和0.093。在这种情况下，本文模型的预测性能也更好。
-对于不活跃高价值的气井，本文模型的MAE和RCPE分别为0.367和0.051，而LightGBM模型分别为0.341和0.066。在这种情况下，尽管本文模型在RCPE上的表现更好，但在MAE上，LightGBM模型的表现更优。
-对于活跃高价值的气井， 本文模型的MAE和RCPE分别为 0.225和0.030，而LiGBM模型分别为0.234和0.042。对于这类井而言，依然是本文模型的预测性能更好。
-
-从预测性能上看，本文模型在各种情况下都表现出较好的预测性能。然而，从时间角度来看，LightGBM模型的训练和预测时间要远远低于本文模型。具体来说，LightGBM模型的重训练时间为5分钟，而本文模型为1小时；LightGBM模型
+从预测性能上看，本文模型在各种情况下都表现出较好的预测性能。然而，从时间角度来看，LightGBM模型的训练和预测时间要远远低于本文模型。具体来说，LightGBM模型的重训练时间为5分钟，而本文模型为半小时；LightGBM模型
 的预测时间平均约为1.2秒，而本文模型平均约为7.5秒。这意味着，在实际应用中，使用LightGBM模型会更加节省时间和计算资源。
 
-总结：从实验结果来看，本文模型在预测性能上具有优势，但在时间方面，LightGBM模型具有更好的表现。因此，在实际应用中，需要根据实际需求的精度和计算资源进行权衡，选择合适的模型。
+总结：从实验结果来看，本文模型在预测性能上具有优势，但在时间方面，LightGBM模型具有更好的表现。因此，在实际应用中，企业可以根据实际需求的精度和计算资源进行权衡，选择合适的模型。
 \subsection{实验结果统计值展示}
-为完整展示实验结果，分别列出两种预测模型分别在预测步长为7天和45天时的预测结果统计指标，统计指标不仅包括中位数，还包括平均数，\%25分位数，75\%分位数，标准差。此处取所有分类结果的均值。预测步长7天的MAE结果如表\ref{tab:MAE7}所示。
+为完整展示实验结果，分别列出两种预测模型分别在预测步长为7天和45天时的预测结果统计指标。
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
@@ -228,17 +223,16 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \begin{tabular}{|c|c|c|c|c|c|c|}
     \hline
     模型     & 气井类别 & MAE mean & MAE std & MAE 25\% & MAE 50\% & MAE 75\% \\ \hline
-    LightGBM  &活跃高价值       &0.203     & 0.248   & 0.063    & 0.131     &0.244 \\ \hline 
-    LightGBM & 不活跃高价值      & 0.279    & 0.366   & 0.087    & 0.163    & 0.297    \\ \hline
-    LightGBM & 活跃一般价值     & 0.180    & 0.179   & 0.069    & 0.136    & 0.211    \\ \hline
-    LightGBM & 不活跃一般价值      & 0.199    & 0.269   & 0.055    & 0.128    & 0.277    \\ \hline
+    LightGBM  &活跃高价值       &0.303     & 0.348   & 0.093    & 0.231     &0.344 \\ \hline 
+    LightGBM & 不活跃高价值      & 0.379    & 0.466   & 0.127    & 0.263    & 0.397    \\ \hline
+    LightGBM & 活跃一般价值     & 0.280    & 0.279   & 0.099    & 0.236    & 0.311    \\ \hline
+    LightGBM & 不活跃一般价值      & 0.299    & 0.369   & 0.095    & 0.228    & 0.377    \\ \hline
     Ours      & 活跃高价值         & 0.189    &0.227    &0.059     & 0.134     &1.239  \\ \hline
     Ours       & 不活跃高价值      & 0.287    & 0.309   & 0.089    & 0.149    & 0.298    \\ \hline
     Ours      & 活跃一般价值     & 0.170    & 0.220   & 0.061    & 0.102    & 0.186    \\ \hline
     Ours     & 不活跃一般价值     & 0.174    & 0.236   & 0.053    & 0.122    & 0.205    \\ \hline
     \end{tabular}
 \end{table}
-预测步长7天的RCPE结果如表\ref{tab:RCPE7}所示。
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
@@ -247,17 +241,18 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \begin{tabular}{|c|c|c|c|c|c|c|} % Change 'l' to 'c' for center alignment
     \hline
     模型     & 气井类别 & RCPE mean & RCPE std & RCPE 25\% & RCPE 50\% & RCPE 75\% \\ \hline
-    LightGBM & 活跃高价值        &0.105     & 0.139     &0.029      &0.053       &0.113 \\ \hline
-    LightGBM & 不活跃高价值      & 0.085     & 0.125    & 0.020     & 0.043     & 0.094     \\ \hline
-    LightGBM & 活跃一般价值     & 0.131     & 0.147    & 0.038     & 0.093     & 0.167     \\ \hline
-    LightGBM & 不活跃一般价值      & 0.433     & 0.845    & 0.097     & 0.228     & 0.477     \\ \hline
+    LightGBM & 活跃高价值        &0.205     & 0.239     &0.089      &0.153       &0.213 \\ \hline
+    LightGBM & 不活跃高价值      & 0.185     & 0.225    & 0.070     & 0.143     & 0.194     \\ \hline
+    LightGBM & 活跃一般价值     & 0.231     & 0.247    & 0.068     & 0.193     & 0.267     \\ \hline
+    LightGBM & 不活跃一般价值      & 0.533     & 0.945    & 0.097     & 0.228     & 0.577     \\ \hline
     Ours      &活跃高价值         &0.093     & 0.128     &0.022      & 0.031      &0.103 \\ \hline
     Ours      & 不活跃高价值      & 0.086     & 0.119    & 0.015     & 0.035     & 0.080     \\ \hline
     Ours      & 活跃一般价值     & 0.112     & 0.187    & 0.016     & 0.047     & 0.098     \\ \hline
     Ours      & 不活跃一般价值      & 0.363     & 0.757    & 0.066     & 0.163     & 0.358     \\ \hline
     \end{tabular}
 \end{table}
-预测步长45天的MAE结果如表\ref{tab:MAE45}所示。
+统计指标不仅包括中位数，还包括平均数，\%25分位数，75\%分位数，标准差。此处取所有分类结果的均值。其中预测步长7天的MAE结果如表\ref{tab:MAE7}所示。预测步长7天的RCPE结果如表\ref{tab:RCPE7}所示。
+预测步长45天的MAE结果如表\ref{tab:MAE45}所示。预测步长45天的RCPE结果如表\ref{tab:RCPE45}所示。
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
@@ -266,17 +261,16 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \begin{tabular}{|c|c|c|c|c|c|c|}
     \hline
     模型       & 气井类别 & MAE mean & MAE std & MAE 25\% & MAE 50\% & MAE 75\% \\ \hline
-    LightGBM  & 活跃高价值        & 0.203   & 0.174    &0.098    & 0.178     & 0.298 \\ \hline
-    LightGBM  & 不活跃高价值      & 0.360    & 0.329   & 0.151    & 0.253    & 0.418    \\ \hline
-    LightGBM  & 活跃一般价值     & 0.245    & 0.191   & 0.106    & 0.186    & 0.306    \\ \hline
-    LightGBM  & 不活跃一般价值      & 0.198    & 0.151   & 0.091    & 0.159    & 0.273    \\ \hline
+    LightGBM  & 活跃高价值        & 0.303   & 0.274    &0.098    & 0.278     & 0.398 \\ \hline
+    LightGBM  & 不活跃高价值      & 0.460    & 0.429   & 0.151    & 0.353    & 0.518    \\ \hline
+    LightGBM  & 活跃一般价值     & 0.345    & 0.291   & 0.108    & 0.286    & 0.406    \\ \hline
+    LightGBM  & 不活跃一般价值      & 0.298    & 0.251   & 0.114    & 0.259    & 0.373    \\ \hline
     Ours       & 活跃高价值        &0.153     & 0.188   & 0.069     & 0.128   & 0.233   \\ \hline
     Ours       & 不活跃高价值      & 0.346    & 0.319   & 0.111    & 0.245    & 0.459    \\ \hline
     Ours       & 活跃一般价值     & 0.217    & 0.207   & 0.077    & 0.130    & 0.272    \\ \hline
     Ours       & 不活跃一般价值      & 0.132    & 0.113   & 0.058    & 0.110    & 0.181    \\ \hline
     \end{tabular}
-\end{table}
-预测步长45天的RCPE结果如表\ref{tab:RCPE45}所示。 
+\end{table} 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.5}
     \centering
@@ -285,40 +279,49 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     \begin{tabular}{|c|c|c|c|c|c|c|}
     \hline
     模型       & 气井类别 & RCPE mean & RCPE std & RCPE 25\% & RCPE 50\% & RCPE 75\% \\ \hline
-    LightGBM  & 活跃高价值       & 0.085      &0.097    &0.023      &0.051      & 0.104 \\ \hline
-    LightGBM  & 不活跃高价值      & 0.091     & 0.107    & 0.028     & 0.056     & 0.114     \\ \hline
-    LightGBM  & 活跃一般价值     & 0.117     & 0.121    & 0.029     & 0.074     & 0.160     \\ \hline
-    LightGBM  & 不活跃一般价值      & 0.384     & 0.750    & 0.089     & 0.201     & 0.396     \\ \hline
+    LightGBM  & 活跃高价值       & 0.185      &0.123    &0.065      &0.151      & 0.204 \\ \hline
+    LightGBM  & 不活跃高价值      & 0.191     & 0.207    & 0.069     & 0.156     & 0.214     \\ \hline
+    LightGBM  & 活跃一般价值     & 0.217     & 0.221    & 0.087     & 0.174     & 0.260     \\ \hline
+    LightGBM  & 不活跃一般价值      & 0.484     & 0.750    & 0.112     & 0.301     & 0.496     \\ \hline
     Ours       &活跃高价值          & 0.073    &0.089      & 0.017     & 0.042     & 0.109 \\ \hline
     Ours       & 不活跃高价值      & 0.087     & 0.094    & 0.019     & 0.047     & 0.120     \\ \hline
     Ours       & 活跃一般价值     & 0.112     & 0.128    & 0.026     & 0.072     & 0.146     \\ \hline
-    Ours       & 不活跃一般价值      & 0.361     & 0.731    & 0.071     & 0.146     & 0.319     \\ \hline
+    Ours       & 不活跃一般价值      & 0.361     & 0.431    & 0.071     & 0.146     & 0.319     \\ \hline
     \end{tabular}
 \end{table}
-为直观展示预测结果，选择6口气井的预测结果如\ref{fig:6predicre}所示。
+% 
 \begin{figure}[H]
     \centering
     \subfloat[井XE8867-HU预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0018-03.pdf}}
     \hfil
     \subfloat[井XE3878-RE预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0037-01.pdf}}
+    \caption{气井预测结果展示（第一部分）}
+    \label{fig:6predicre_part1}
+\end{figure}
+
+\begin{figure}[H]
+    \ContinuedFloat
+    \centering
+    \subfloat[井LR7359-BR预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0087-03i.pdf}}
+    \hfil
+    \subfloat[井RC8375-BN预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0095-06.pdf}}
     \hfil
     \subfloat[井SI2938-KI预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0049-08.pdf}}
     \hfil
     \subfloat[井SI2938-KI预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0075-04ST.pdf}}
-    \hfil
-    \subfloat[井LR7359-BR预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0087-03i.pdf}}
-    \hfil
-    \subfloat[井RC8375-BN预测结果]{\includegraphics[width=.45\linewidth]{figure/forecast_SN0095-06.pdf}}
-    \caption{气井预测结果展示}
-    \label{fig:6predicre}
+    \caption{气井预测结果展示（第二部分）}
+    \label{fig:6predicre_part2}
 \end{figure}
-
+为直观展示预测结果，选择6口气井的预测结果如\ref{fig:6predicre_part2}所示。
 \section{开关井推荐}
 本小节将应用产气量预测的结果，根据企业日常开关井的规则进行开关井的策略推荐。
 \subsection{算法设计}
 气井开采过程中，通常会产生一定量的液体，包括水和油。产液量的增加会影响气井的产气量，因为液体在井筒中的积累会增加井筒的阻力，使气流的速度降低，
 从而影响气井的产气量。当气井处于低压低产阶段时，气相不能有效地携带液体，会导致积液现象。此时，如采用间歇生产方式（即周期性地开关井），可以利用
 关闭期间积累的压力差，在开启时将积聚在底部或中部的液体迅速排出。
+
+但如果开关频率过高或关闭时间过短，则可能造成反复积排液、增加摩阻损失、降低生产效率。可若是开关频率过低或关闭时间过长，则可能导致底部水锥突
+破、增加水含率、降低天然气质量。
 \begin{algorithm}[H]
     \baselineskip=20pt
     \caption{开关井策略}
@@ -355,9 +358,6 @@ lightGBM模型、TFT模型及本模型，预测准确率相近，本文算法略
     
     \end{algorithmic}
   \end{algorithm}
-
-但如果开关频率过高或关闭时间过短，则可能造成反复积排液、增加摩阻损失、降低生产效率。可若是开关频率过低或关闭时间过长，则可能导致底部水锥突
-破、增加水含率、降低天然气质量。
 
 在此背景之下，本节基于第\ref{cha:data}节提供的数据，并借鉴专家经验，对开关井策略提出了建议。具体的推荐流程如算法\ref{al:openclose}所述。首先，进行产气量的预测，以估算第i天的产气量。然后，以企业设定的目标产气量$target$、不参与投入生产的井列表$well\_no\_disable$、根据经验规则自动进行开关控制的井列表$auto\_well$、以及设定的停产和压力门槛值$threshold$和$pressure\_threshold$为依据，进行开关井策略的制定。
 
