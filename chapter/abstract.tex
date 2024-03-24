@@ -7,16 +7,16 @@
     
     本文的主要研究工作如下:
     
-    (1)考虑到不同气井呈现出的不同的生产特性，本文创新性地将原本用于营销领域的RFM（Recency, Frequency, Monetary） 模型应用于气井分类问题。通过将RFM模型与核密度估计（Kernel Density Estimation，KDE）方法结合，提出了一种新颖的气井分类算法。
+    （1）考虑到不同气井呈现出的不同的生产特性，本文创新性地将原本用于营销领域的RFM（Recency， Frequency， Monetary） 模型应用于气井分类问题。通过将RFM模型与核密度估计（Kernel Density Estimation，KDE）方法结合，提出了一种新颖的气井分类算法。
     与传统聚类算法和时间聚类算法相比，该方法结果更稳定，且具备清晰的物理意义，有助于气井分类管理。该分类方法在后续产气量预测中亦能显著提升预测效果。
     
-    (2)过去企业在需要制定方案时，经常依赖经验盲目决策。因此，企业希望可以对气井产气量进行准确预测，以帮助他们使用数据驱动的方式科学地做出决策。基于此需求，本文提出一种基于Transformer的时间序列预测算法，将其用于气井的产气量预测。
-    该算法可综合利用混合输入(包括静态信息、过去已知未来不可知信息及过去未来已知历史数据)，采用门控循环单元（Gated Recurrent Unit, GRU）学习局部特征，利用自注意力机制学习不同时间步间的长期依赖关系。
+    （2）过去企业在需要制定方案时，经常依赖经验盲目决策。因此，企业希望可以对气井产气量进行准确预测，以帮助他们使用数据驱动的方式科学地做出决策。基于此需求，本文提出一种基于Transformer的时间序列预测算法，将其用于气井的产气量预测。
+    该算法可综合利用混合输入（包括静态信息、过去已知未来不可知信息及过去未来已知历史数据），采用门控循环单元（Gated Recurrent Unit， GRU）学习局部特征，利用自注意力机制学习不同时间步间的长期依赖关系。
     最终实验效果显示其可以较为准确地预测未来产气量，为企业优化生产管理与决策提供了科学依据。
     
-    (3)针对企业软件应用分散、数据孤岛等问题，本文详细的需求分析的基础上，设计了一个包含数据连接、数据管理和智能分析三大模块的气井智能管控系统。该系统可有效整合分散数据资源，消除信息孤岛。同时，其智能分析模块提供了气井分类、产气量预测、开关井推荐等功能，可以大幅提升数据利用率与决策质量。
+    （3）针对企业软件应用分散、数据孤岛等问题，本文详细的需求分析的基础上，设计了一个包含数据连接、数据管理和智能分析三大模块的气井智能管控系统。该系统可有效整合分散数据资源，消除信息孤岛。同时，其智能分析模块提供了气井分类、产气量预测、开关井推荐等功能，可以大幅提升数据利用率与决策质量。
 
-\keywords{RFM 、核密度估计、产气量预测、数据管理}
+\keywords{RFM 、核密度估计、时间序列预测、数据管理}
 \end{abstract}
 \begin{englishabstract}
     Currently, as the wave of digital transformation surges, the oil and natural gas industry is also facing unprecedented changes and challenges. Among them, as the backbone of the gas well industry, a certain Shaanxi oil field enterprise has seen an increasing number of gas wells, and the management of old wells has gradually become more difficult. Against this backdrop, the company is acutely aware of the necessity for digital construction; however, it still remains in a stage dominated by traditional experience in production management and decision-making, making it difficult to meet the developmental demands of the new era.
