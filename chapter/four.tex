@@ -87,7 +87,7 @@
 \begin{figure}[h]
     \centering
     \includegraphics{figure/第四章框架图.vision.pdf}
-    \caption{基于transformer的气井产量预测算法框架示意图}
+    \caption{气井产量预测算法框架示意图}
     \label{fig:TFTprogess}
 \end{figure}
 
@@ -132,7 +132,7 @@ Decoder部分使用自注意力机制来解码未来时刻的预测值，每个�
 \begin{figure}[H]
     \centering
     \includegraphics[width=.99\linewidth]{figure/基于Transformer的算法.vision.pdf}
-    \caption{基于transformer的气井产量预测算法的模型结构图}
+    \caption{基于Transformer的气井产量预测算法的模型结构图}
     \label{fig:TFT}
 \end{figure}
 
@@ -252,7 +252,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 \begin{equation}
     \boldsymbol{\psi}(t, n) = \text{GRN}_{\boldsymbol{\psi}}(\boldsymbol{\delta}(t, n))
 \end{equation}
-其中$ \text{GRN}_{\boldsymbol{\psi}}$的权重在整个层中共享。此处还应用了一个跳过整个transformer块的残差连接，为序列到序列层提供了直接的路径。
+其中$ \text{GRN}_{\boldsymbol{\psi}}$的权重在整个层中共享。此处还应用了一个跳过整个Transformer块的残差连接，为序列到序列层提供了直接的路径。
 倘若不需要额外的复杂性，就可以得到一个更简单的模型。如下所示：
 \begin{equation}
     \tilde{\boldsymbol{\psi}}(t, n) = \text{LayerNorm}(\tilde{\boldsymbol{\delta}}(t, n)) + \text{GLU}_{\tilde{\boldsymbol{\psi}}}({\boldsymbol{\psi}}(t, n))
@@ -288,7 +288,7 @@ $\odot $ 是元素的Hadamard乘积。GLU允许模型控制GRN对原始输入$\m
 此时会有两种情况，若$(y - \hat{y} )$，即模型预测偏小，Loss增加会更多，否则模型预测偏大，Loss增加会更少。由于权重是3:1，所以训练时，模型会越来越趋向于预测出大的数字，这样Loss下降的更快，则模型的整个拟合的超平面会向上移动，
 这样便能很好的拟合出目标变量的75分位数值。为了避免不同预测点下的预测量纲不一致问题，本文对随时函数进行了正则化处理。
 \section{算法实现}
-\subsection{基于transformer的气井产量预测算法}
+\subsection{基于Transformer的气井产量预测算法}
 为实现产气量预测算法，本文以XE9984-HI 气井数据为例，展示协变量的表示。如表\ref{tab:realdata}
 所示，表分为上下两部分，具体每一列分别表示气井已经生产天数、集气站号、井丛好、气井号、配产量、日开井时间、井口压力、套压、井口温度、日产气量。得到气井数据后，需要先进行如章节\ref{sec:datafoc}所示的数据分段方法进行时间窗口的划分，由问题描述可知，训练样本可以表示为如式\eqref{eq:traindata}所示。
 以预测未来45天的产气量为例，此时$\tau=45$，根据经验，T可以取值为75。气井数据表中完整的一行表示一对$(\mathbf{x_i},\mathbf{y_i})$，对于每次训练，其输入包括：$75 \times 5$（已经生产天数\( \lambda  \)、日开井时间h、井口压力\( \delta \)、套压\( \rho \)和
@@ -458,4 +458,4 @@ MSE损失的定义如式\eqref{eq:mseloss}所示。
 在训练好的模型中，通过递归预测的方式，预测未来若干天的产气量。具体地，从当前时刻开始，先用模型预测未来第一天的产气量，然后将预测结果作为已知量（未来第二天地Lag1特征）输入到模型中，再预测未来第二天的产气量，以此类推。
 
 \section{本章小节}
-本章介绍了对气井产气量预测的必要性，并根据时间序列数据协变量的特征将气井的变量进行分类，定义了气井产气量预测的数学模型，并提出了一种基于transformer的气井产气量预测算法，并描述了其实现细节。同时为了应对企业的不同需求，本章对本文算法以及基于lightGBM的气井预测算法都进行了实现，可供企业在产气量预测时进行多样化选择。
+本章介绍了对气井产气量预测的必要性，并根据时间序列数据协变量的特征将气井的变量进行分类，定义了气井产气量预测的数学模型，并提出了一种基于Transformer的气井产气量预测算法，并描述了其实现细节。同时为了应对企业的不同需求，本章对本文算法以及基于lightGBM的气井预测算法都进行了实现，可供企业在产气量预测时进行多样化选择。
